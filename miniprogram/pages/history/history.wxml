@@ -1,0 +1,9 @@
+<view class="container">
+  <view class="title">跑步历史记录</view>
+  <view class="record-item" wx:for="{{runHistory}}" wx:key="index">
+    <view>第{{index+1}}次跑步</view>
+    <view>时间：{{item.time}}</view>
+    <view>时长：{{item.duration}}</view>
+  </view>
+  <view wx:if="{{runHistory.length === 0}}" class="empty">暂无跑步记录</view>
+</view>

@@ -1,15 +1,32 @@
- {
+{
   "pages": [
-    "pages/index/index"
+    "pages/login/login",
+    "pages/run/run",
+    "pages/history/history"
   ],
   "window": {
-    "backgroundColor": "#F6F6F6",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#F6F6F6",
-    "navigationBarTitleText": "云开发 QuickStart",
-    "navigationBarTextStyle": "black"
+    "navigationBarBackgroundColor": "#1677ff",
+    "navigationBarTitleText": "校园跑步小程序",
+    "navigationBarTextStyle": "white"
   },
-  "sitemapLocation": "sitemap.json",
+  "tabBar": {
+    "color": "#666666",
+    "selectedColor": "#1677ff",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/run/run",
+        "text": "开始跑步"
+       
+      },
+      {
+        "pagePath": "pages/history/history",
+        "text": "跑步历史"
+      }
+    ]
+  },
   "style": "v2",
-  "lazyCodeLoading": "requiredComponents"
+  "sitemapLocation": "sitemap.json"
 }

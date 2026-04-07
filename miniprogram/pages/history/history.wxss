@@ -1,0 +1,19 @@
+.container {
+  padding: 30rpx;
+}
+.title {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+.record-item {
+  padding: 20rpx;
+  border-bottom: 1rpx solid #eee;
+  margin-bottom: 20rpx;
+}
+.empty {
+  text-align: center;
+  color: #999;
+  margin-top: 100rpx;
+}

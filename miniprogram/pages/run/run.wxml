@@ -1,0 +1,5 @@
+<view class="container">
+  <view class="timer">{{timeText}}</view>
+  <button bindtap="startRun" wx:if="{{!isRunning}}" type="primary">开始跑步</button>
+  <button bindtap="stopRun" wx:if="{{isRunning}}" type="warn">结束跑步</button>
+</view>
