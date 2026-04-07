@@ -1,0 +1,56 @@
+<!--pages/home.wxml-->
+<!-- 用户主页 -->
+<view class="container">
+  <!-- 1. 用户信息卡片 -->
+  <view class="user-card">
+    <image class="avatar" src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}"></image>
+    <view class="user-info">
+      <text class="nickname">{{userInfo.nickName || '微信用户'}}</text>
+      <view class="stats-row">
+        <view class="stat-item">
+          <text class="stat-num">{{userInfo.totalRunCount || 0}}</text>
+          <text class="stat-label">总次数</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-num">{{userInfo.totalDistance || 0}}</text>
+          <text class="stat-label">总公里数</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 2. 跑步记录录入区 -->
+  <view class="input-card">
+    <text class="card-title">记录跑步</text>
+    <view class="form-item">
+      <text>跑步时长(分钟)</text>
+      <input type="number" placeholder="请输入时长" value="{{duration}}" bindinput="onDurationInput" />
+    </view>
+    <view class="form-item">
+      <text>跑步距离(公里)</text>
+      <input type="digit" placeholder="请输入距离" value="{{distance}}" bindinput="onDistanceInput" />
+    </view>
+    <view class="form-item">
+      <text>消耗热量(千卡)</text>
+      <input type="number" placeholder="自动计算" value="{{calories}}" disabled />
+    </view>
+    <button type="primary" bindtap="saveRunRecord" class="save-btn">存入数据</button>
+  </view>
+
+  <!-- 3. 跑步历史记录区 -->
+  <view class="history-card">
+    <text class="card-title">跑步历史</text>
+    <scroll-view class="history-list" scroll-y>
+      <view wx:for="{{historyList}}" wx:key="_id" class="history-item">
+        <view class="history-info">
+          <text class="history-date">{{item.createTime}}</text>
+          <text class="history-detail">{{item.duration}}分钟 · {{item.distance}}公里</text>
+        </view>
+        <text class="history-calories">{{item.calories}}千卡</text>
+      </view>
+      <view wx:if="{{hasMore}}" class="load-more" bindtap="loadMoreHistory">加载更多</view>
+      <view wx:elif="{{historyList.length > 0}}" class="no-more">已经到底啦</view>
+      <view wx:else class="empty-tip">还没有跑步记录，快去记录第一条吧~</view>
+    </scroll-view>
+  </view>
+</view>

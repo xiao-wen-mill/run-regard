@@ -1,32 +1,38 @@
 {
   "pages": [
     "pages/login/login",
+    "pages/index/index",
     "pages/run/run",
-    "pages/history/history"
+    "pages/history/history",
+    "pages/home/home"
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#1677ff",
-    "navigationBarTitleText": "校园跑步小程序",
-    "navigationBarTextStyle": "white"
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "运动记录",
+    "navigationBarTextStyle": "black"
   },
   "tabBar": {
-    "color": "#666666",
-    "selectedColor": "#1677ff",
-    "backgroundColor": "#ffffff",
-    "borderStyle": "black",
+    "color": "#666",
+    "selectedColor": "#07c160",
     "list": [
       {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
         "pagePath": "pages/run/run",
-        "text": "开始跑步"
-       
+        "text": "运动"
       },
       {
         "pagePath": "pages/history/history",
-        "text": "跑步历史"
+        "text": "历史"
+      },
+      {
+        "pagePath": "pages/home/home",
+        "text": "主页"
       }
     ]
   },
-  "style": "v2",
   "sitemapLocation": "sitemap.json"
 }

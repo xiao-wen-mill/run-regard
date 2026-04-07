@@ -1,0 +1,138 @@
+/* pages/home.wxss */
+.container {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 20rpx;
+}
+
+/* 用户信息卡片 */
+.user-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05);
+}
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin-right: 30rpx;
+}
+.user-info .nickname {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 20rpx;
+}
+.stats-row {
+  display: flex;
+  gap: 40rpx;
+}
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.stat-num {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #07c160;
+}
+.stat-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+/* 录入卡片 */
+.input-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05);
+}
+.card-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 30rpx;
+}
+.form-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25rpx;
+}
+.form-item text {
+  font-size: 28rpx;
+  color: #666;
+  width: 200rpx;
+}
+.form-item input {
+  flex: 1;
+  height: 70rpx;
+  border: 1rpx solid #eee;
+  border-radius: 8rpx;
+  padding: 0 20rpx;
+  font-size: 28rpx;
+}
+.save-btn {
+  width: 100%;
+  margin-top: 20rpx;
+  border-radius: 8rpx;
+  background: #07c160;
+}
+
+/* 历史记录卡片 */
+.history-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05);
+  height: 600rpx;
+  display: flex;
+  flex-direction: column;
+}
+.history-list {
+  flex: 1;
+}
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+.history-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+.history-date {
+  font-size: 24rpx;
+  color: #999;
+}
+.history-detail {
+  font-size: 28rpx;
+  color: #333;
+}
+.history-calories {
+  font-size: 28rpx;
+  color: #ff6b6b;
+  font-weight: bold;
+}
+.load-more, .no-more, .empty-tip {
+  text-align: center;
+  padding: 30rpx 0;
+  font-size: 26rpx;
+  color: #999;
+}
+.load-more {
+  color: #07c160;
+}
