@@ -12,3 +12,4 @@
 
   <button type="primary" bindtap="saveRunRecord">存入数据</button>
 </view>
+<view></view>
