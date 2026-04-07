@@ -1,5 +1,14 @@
-<view>
-  weixincloud-tip-modal
-</view>
-这是首页
+<!-- pages/index/index.wxml -->
+<view class="container">
+  <view class="form-item">
+    <text>跑步时长（分钟）</text>
+    <input type="number" placeholder="请输入时长" value="{{duration}}" bindinput="onDurationInput" />
+  </view>
 
+  <view class="form-item">
+    <text>跑步距离（公里）</text>
+    <input type="digit" placeholder="请输入距离" value="{{distance}}" bindinput="onDistanceInput" />
+  </view>
+
+  <button type="primary" bindtap="saveRunRecord">存入数据</button>
+</view>

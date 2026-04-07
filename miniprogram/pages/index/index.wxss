@@ -1,0 +1,25 @@
+/* pages/index/index.wxss */
+.container {
+  padding: 40rpx;
+}
+
+.form-item {
+  margin-bottom: 40rpx;
+}
+
+.form-item text {
+  display: block;
+  margin-bottom: 20rpx;
+  font-size: 32rpx;
+}
+
+input {
+  border: 1px solid #ddd;
+  border-radius: 8rpx;
+  padding: 20rpx;
+  font-size: 32rpx;
+}
+
+button {
+  margin-top: 40rpx;
+}
