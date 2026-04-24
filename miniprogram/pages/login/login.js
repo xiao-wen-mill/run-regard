@@ -11,12 +11,12 @@ Page({
         getApp().globalData.userInfo = res.result.userInfo
         wx.hideLoading()
         wx.showToast({ title: '登录成功', icon: 'success' })
+        console.log('准备跳转')
         setTimeout(() => wx.switchTab({ url: '/pages/home/home' }), 1000)
       } else {
-        // 登录失败，用户未注册，跳转到注册页
+        // 登录失败，显示错误信息
         wx.hideLoading()
         wx.showToast({ title: res.result.message, icon: 'none' })
-        setTimeout(() => wx.navigateTo({ url: '/pages/register/register' }), 1000)
       }
     } catch (err) {
       wx.hideLoading()
