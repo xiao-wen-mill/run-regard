@@ -8,29 +8,29 @@ App({
       traceUser: true
     })
 
-    // 调用 check-user 云函数检查用户是否已注册
-    this.checkUserRegistration()
+    // 读取本地登录标记
+    const hasLogin = wx.getStorageSync('hasLogin')
+
+    // 如果已经登录过，直接进首页
+    if (hasLogin) {
+      wx.switchTab({
+        url: '/pages/home/home'
+      })
+    }
+    // 没登录过：啥也不做，原地停在注册页，不跳转！
   },
 
-  // 检查用户是否已注册
+  // 保留这个函数，但自动不调用了
   checkUserRegistration() {
     wx.cloud.callFunction({
       name: 'check-user'
     }).then(res => {
       if (res.result.success) {
         if (res.result.isRegistered) {
-          // 已注册，跳转登录页
           wx.navigateTo({
             url: '/pages/login/login'
           })
-        } else {
-          // 未注册，跳转注册页
-          wx.navigateTo({
-            url: '/pages/register/register'
-          })
         }
-      } else {
-        console.error('检查用户注册状态失败:', res)
       }
     }).catch(err => {
       console.error('调用 check-user 云函数失败:', err)

@@ -3,7 +3,11 @@
 <view class="container">
   <!-- 1. 用户信息卡片 -->
   <view class="user-card">
-    <image class="avatar" src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}"></image>
+    <!-- 👇 这里已经改成纯色头像，无图片，不报错 -->
+    <view class="avatar">
+      <text class="avatar-icon">👤</text>
+    </view>
+
     <view class="user-info">
       <text class="nickname">{{userInfo.nickName || '微信用户'}}</text>
       <view class="stats-row">

@@ -1,10 +1,24 @@
-<view class="container" style="padding: 100rpx; text-align: center;">
-  <view style="margin-bottom: 80rpx;">
-    <image wx:if="{{avatarUrl}}" src="{{avatarUrl}}" style="width: 200rpx; height: 200rpx; border-radius: 50%; margin: 0 auto;"></image>
-    <view wx:else style="width: 200rpx; height: 200rpx; border-radius: 50%; margin: 0 auto; background: #f5f5f5; display: flex; align-items: center; justify-content: center;">
-      <text style="font-size: 28rpx; color: #666;">点击授权</text>
-    </view>
+<view class="container">
+  <!-- 固定纯色圆形头像，无授权功能 -->
+  <view class="avatar-placeholder">
+    <text class="icon">👤</text>
   </view>
-  <view wx:if="{{nickName}}" style="margin-bottom: 60rpx; font-size: 32rpx;">{{nickName}}</view>
-  <button bindtap="getProfile" style="background: #07c160; border: none; border-radius: 12rpx; padding: 20rpx 40rpx; font-size: 32rpx;">微信授权注册</button>
+
+  <!-- 昵称输入框 -->
+  <input class="nick-input" placeholder="请输入昵称" bindinput="onNickInput" value="{{nickName}}"/>
+
+  <!-- 微信注册按钮 -->
+  <button 
+    bindtap="handleRegister" 
+    class="register-btn"
+    disabled="{{!isChecked || !nickName}}"
+  >
+    微信注册
+  </button>
+
+  <!-- 勾选框（已经放在这里，样式会自动定位到80%位置） -->
+  <view class="checkbox-wrap">
+    <checkbox checked="{{isChecked}}" bindtap="toggleCheck" color="#07c160"></checkbox>
+    <text class="checkbox-text">我已阅读并同意授权信息</text>
+  </view>
 </view>
