@@ -44,10 +44,11 @@ Page({
     })
   },
 
-  startRun() {
+  async startRun() {
     const app = getApp()
-    if (!app.globalData.userInfo) {
-      wx.showToast({ title: "请先登录", icon: "none" })
+    // 先调用 login 云函数验证登录态
+    const isLoggedIn = await app.verifyLogin()
+    if (!isLoggedIn) {
       return
     }
 
@@ -91,8 +92,8 @@ Page({
 
       if (this.data.lastLat && this.data.lastLng) {
         const dis = this.getDistance(this.data.lastLat, this.data.lastLng, res.latitude, res.longitude)
-        const timeDiff = point.timestamp - (this.data.gpsPoints[this.data.gpsPoints.length-2]?.timestamp || point.timestamp)
-        const speed = dis / (timeDiff/1000)
+        const timeDiff = point.timestamp - (this.data.gpsPoints[this.data.gpsPoints.length - 2]?.timestamp || point.timestamp)
+        const speed = dis / (timeDiff / 1000)
         if (speed <= 10) {
           const newDis = this.data.distance + dis
           this.setData({
@@ -115,15 +116,22 @@ Page({
     if (distanceKm > 0) {
       const paceMin = durationMin / distanceKm
       const pMin = Math.floor(paceMin)
-      const pSec = Math.round((paceMin - pMin)*60)
-      paceStr = `${String(pMin).padStart(2,'0')}:${String(pSec).padStart(2,'0')}`
+      const pSec = Math.round((paceMin - pMin) * 60)
+      paceStr = `${String(pMin).padStart(2, '0')}:${String(pSec).padStart(2, '0')}`
     }
 
     calories = Math.round(weight * distanceKm * 1.036)
     this.setData({ paceStr, calories })
   },
 
-  stopRun() {
+  async stopRun() {
+    const app = getApp()
+    // 保存记录前先验证登录态
+    const isLoggedIn = await app.verifyLogin()
+    if (!isLoggedIn) {
+      return
+    }
+
     clearInterval(this.timer)
     wx.offLocationChange(this.locationWatch)
     wx.stopLocationUpdate()
