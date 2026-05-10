@@ -17,6 +17,8 @@ exports.main = async (event, context) => {
       openid,
       nickName: nickName || '微信用户',
       avatarUrl: avatarUrl || '',
+      weight: 60,              // 体重（公斤），默认60kg
+      avgStride: 0.85,         // 平均步幅（米），默认0.85米
       createTime: new Date(),
       totalRunCount: 0,
       totalDistance: 0

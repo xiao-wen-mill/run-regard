@@ -21,6 +21,8 @@ exports.main = async (event, context) => {
     userInfo: {
       nickName: user.nickName,
       avatarUrl: user.avatarUrl,
+      weight: user.weight || 60,
+      avgStride: user.avgStride || 0.85,
       totalRunCount: user.totalRunCount,
       totalDistance: user.totalDistance
     }
