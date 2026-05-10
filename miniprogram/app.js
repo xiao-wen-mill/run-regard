@@ -16,21 +16,26 @@ App({
       wx.switchTab({
         url: '/pages/home/home'
       })
+      return
     }
-    // 没登录过：啥也不做，原地停在注册页，不跳转！
+
+    // 未登录过：检查用户是否已注册
+    this.checkUserRegistration()
   },
 
-  // 保留这个函数，但自动不调用了
+  // 检查用户是否已注册
   checkUserRegistration() {
     wx.cloud.callFunction({
       name: 'check-user'
     }).then(res => {
       if (res.result.success) {
         if (res.result.isRegistered) {
-          wx.navigateTo({
+          // 已注册但未登录，跳登录页
+          wx.redirectTo({
             url: '/pages/login/login'
           })
         }
+        // 未注册：停在当前注册页，不跳转
       }
     }).catch(err => {
       console.error('调用 check-user 云函数失败:', err)

@@ -42,8 +42,8 @@ Page({
 
       wx.hideLoading()
       if (res.result.success) {
-        wx.showToast({ title: '注册成功！跳转主页...' })
-        setTimeout(() => wx.switchTab({ url: '/pages/home/home' }), 1200)
+        wx.showToast({ title: '注册成功！请登录...' })
+        setTimeout(() => wx.redirectTo({ url: '/pages/login/login' }), 1200)
       } else {
         wx.showToast({ title: res.result.message || '注册失败', icon: 'none' })
       }
