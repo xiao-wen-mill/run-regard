@@ -1,25 +1,25 @@
-/* pages/index/index.wxss */
 .container {
-  padding: 40rpx;
+  padding: 60rpx 40rpx;
+  text-align: center;
 }
-
-.form-item {
-  margin-bottom: 40rpx;
-}
-
-.form-item text {
-  display: block;
+.title {
+  font-size: 48rpx;
+  font-weight: bold;
   margin-bottom: 20rpx;
-  font-size: 32rpx;
 }
-
-input {
-  border: 1px solid #ddd;
-  border-radius: 8rpx;
-  padding: 20rpx;
-  font-size: 32rpx;
+.desc {
+  font-size: 28rpx;
+  color: #999;
+  margin-bottom: 80rpx;
 }
-
-button {
-  margin-top: 40rpx;
+.btn-box {
+  margin-top: 60rpx;
+}
+.btn {
+  margin: 20rpx 0;
+  border-radius: 10rpx;
+}
+.gray {
+  background: #f1f1f1;
+  color: #333;
 }

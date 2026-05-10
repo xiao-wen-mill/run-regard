@@ -1,9 +1,33 @@
 <view class="container">
-  <view class="title">跑步历史记录</view>
-  <view class="record-item" wx:for="{{runHistory}}" wx:key="index">
-    <view>第{{index+1}}次跑步</view>
-    <view>时间：{{item.time}}</view>
-    <view>时长：{{item.duration}}</view>
-  </view>
-  <view wx:if="{{runHistory.length === 0}}" class="empty">暂无跑步记录</view>
+  <view class="title">我的跑步历史</view>
+
+  <scroll-view scroll-y class="list">
+    <view wx:for="{{recordList}}" wx:key="_id" class="item">
+      <view class="top">
+        <text class="date">{{item.createTime}}</text>
+      </view>
+      <view class="row">
+        <view class="cell">
+          <text class="label">时长</text>
+          <text class="val">{{formatTime(item.duration)}}</text>
+        </view>
+        <view class="cell">
+          <text class="label">距离</text>
+          <text class="val">{{distanceKm(item.distance)}} km</text>
+        </view>
+      </view>
+      <view class="row">
+        <view class="cell">
+          <text class="label">配速</text>
+          <text class="val">{{formatPace(item.avgPace)}} /km</text>
+        </view>
+        <view class="cell">
+          <text class="label">卡路里</text>
+          <text class="val">{{item.calories}} 千卡</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{recordList.length === 0}}" class="empty">暂无跑步记录</view>
+  </scroll-view>
 </view>

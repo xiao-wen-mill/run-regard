@@ -12,6 +12,12 @@
     "navigationBarTitleText": "",
     "navigationBarTextStyle": "black"
   },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于记录跑步轨迹，计算跑步距离和速度"
+    }
+  },
+  "requiredPrivateInfos": ["onLocationChange", "startLocationUpdate"],
   "tabBar": {
     "color": "#999",
     "selectedColor": "#07c160",

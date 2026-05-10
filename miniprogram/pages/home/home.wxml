@@ -3,7 +3,6 @@
 <view class="container">
   <!-- 1. 用户信息卡片 -->
   <view class="user-card">
-    <!-- 👇 这里已经改成纯色头像，无图片，不报错 -->
     <view class="avatar">
       <text class="avatar-icon">👤</text>
     </view>
@@ -23,25 +22,7 @@
     </view>
   </view>
 
-  <!-- 2. 跑步记录录入区 -->
-  <view class="input-card">
-    <text class="card-title">记录跑步</text>
-    <view class="form-item">
-      <text>跑步时长(分钟)</text>
-      <input type="number" placeholder="请输入时长" value="{{duration}}" bindinput="onDurationInput" />
-    </view>
-    <view class="form-item">
-      <text>跑步距离(公里)</text>
-      <input type="digit" placeholder="请输入距离" value="{{distance}}" bindinput="onDistanceInput" />
-    </view>
-    <view class="form-item">
-      <text>消耗热量(千卡)</text>
-      <input type="number" placeholder="自动计算" value="{{calories}}" disabled />
-    </view>
-    <button type="primary" bindtap="saveRunRecord" class="save-btn">存入数据</button>
-  </view>
-
-  <!-- 3. 跑步历史记录区 -->
+  <!-- 2. 跑步历史记录区 -->
   <view class="history-card">
     <text class="card-title">跑步历史</text>
     <scroll-view class="history-list" scroll-y>

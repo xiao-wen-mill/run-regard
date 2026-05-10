@@ -1,15 +1,36 @@
 .container {
+  padding: 40rpx;
+  text-align: center;
+}
+.time-box {
+  margin: 80rpx 0;
+}
+.time {
+  font-size: 80rpx;
+  font-weight: bold;
+}
+.tip {
+  font-size: 28rpx;
+  color: #999;
+}
+.info-box {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 100rpx;
-}
-.timer {
-  font-size: 72rpx;
+  justify-content: space-around;
   margin-bottom: 100rpx;
-  color: #333;
 }
-button {
-  width: 200rpx;
-  margin: 20rpx 0;
+.item .num {
+  font-size: 60rpx;
+  font-weight: bold;
+}
+.item .unit {
+  font-size: 26rpx;
+  color: #666;
+}
+.start-btn {
+  background: #07c160;
+  color: #fff;
+}
+.stop-btn {
+  background: #f53f3f;
+  color: #fff;
 }

@@ -1,5 +1,22 @@
 <view class="container">
-  <view class="timer">{{timeText}}</view>
-  <button bindtap="startRun" wx:if="{{!isRunning}}" type="primary">开始跑步</button>
-  <button bindtap="stopRun" wx:if="{{isRunning}}" type="warn">结束跑步</button>
+  <view class="time-box">
+    <text class="time">{{timeStr}}</text>
+    <text class="tip">运动时长</text>
+  </view>
+  <view class="info-box">
+    <view class="item">
+      <text class="num">{{distanceKm}}</text>
+      <text class="unit">公里</text>
+    </view>
+    <view class="item">
+      <text class="num">{{paceStr}}</text>
+      <text class="unit">配速</text>
+    </view>
+    <view class="item">
+      <text class="num">{{calories}}</text>
+      <text class="unit">卡路里</text>
+    </view>
+  </view>
+  <button wx:if="{{!isRunning}}" bindtap="startRun" class="start-btn">开始跑步</button>
+  <button wx:else bindtap="stopRun" class="stop-btn">结束跑步</button>
 </view>

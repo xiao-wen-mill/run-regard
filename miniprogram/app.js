@@ -8,37 +8,33 @@ App({
       traceUser: true
     })
 
-    // 读取本地登录标记
     const hasLogin = wx.getStorageSync('hasLogin')
-
-    // 如果已经登录过，直接进首页
+    // 有登录标记 → 校验云侧用户是否有效
     if (hasLogin) {
-      wx.switchTab({
-        url: '/pages/home/home'
-      })
+      this.checkUserRegistration()
       return
     }
-
-    // 未登录过：检查用户是否已注册
-    this.checkUserRegistration()
+    // 无登录标记 → 强制去登录页
+    wx.redirectTo({ url: '/pages/login/login' })
   },
 
-  // 检查用户是否已注册
   checkUserRegistration() {
     wx.cloud.callFunction({
       name: 'check-user'
     }).then(res => {
-      if (res.result.success) {
-        if (res.result.isRegistered) {
-          // 已注册但未登录，跳登录页
-          wx.redirectTo({
-            url: '/pages/login/login'
-          })
-        }
-        // 未注册：停在当前注册页，不跳转
+      // 云侧用户有效 → 进首页
+      if (res.result.success && res.result.isRegistered) {
+        wx.switchTab({ url: '/pages/home/home' })
+      } else {
+        // 云侧无效/未注册 → 清除本地缓存，强制登录
+        wx.removeStorageSync('hasLogin')
+        wx.redirectTo({ url: '/pages/login/login' })
       }
     }).catch(err => {
       console.error('调用 check-user 云函数失败:', err)
+      // 云函数异常 → 清除缓存，强制登录
+      wx.removeStorageSync('hasLogin')
+      wx.redirectTo({ url: '/pages/login/login' })
     })
   }
 })
