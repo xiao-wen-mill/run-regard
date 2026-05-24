@@ -1,10 +1,16 @@
 <!--pages/home.wxml-->
 <!-- 用户主页 -->
 <view class="container">
+  <!-- 顶部标题栏 -->
+  <view class="header">
+    <text class="header-icon">🏠</text>
+    <text class="header-title">运动助手</text>
+  </view>
+  
   <!-- 1. 用户信息卡片 -->
   <view class="user-card">
     <view class="avatar">
-      <text class="avatar-icon">👤</text>
+      <text class="avatar-icon">🏃‍♂️</text>
     </view>
 
     <view class="user-info">
@@ -14,6 +20,7 @@
           <text class="stat-num">{{userInfo.totalRunCount || 0}}</text>
           <text class="stat-label">总次数</text>
         </view>
+        <view class="stat-divider"></view>
         <view class="stat-item">
           <text class="stat-num">{{userInfo.totalDistance || 0}}</text>
           <text class="stat-label">总公里数</text>
@@ -21,6 +28,12 @@
       </view>
     </view>
   </view>
+
+  <!-- 快捷开始按钮 -->
+  <button class="start-btn" bindtap="goToRun">
+    <text>🏃</text>
+    <text>开始跑步</text>
+  </button>
 
   <!-- 2. 跑步历史记录区 -->
   <view class="history-card">
@@ -33,9 +46,18 @@
         </view>
         <text class="history-calories">{{item.calories}}千卡</text>
       </view>
+      
       <view wx:if="{{hasMore}}" class="load-more" bindtap="loadMoreHistory">加载更多</view>
       <view wx:elif="{{historyList.length > 0}}" class="no-more">已经到底啦</view>
-      <view wx:else class="empty-tip">还没有跑步记录，快去记录第一条吧~</view>
+      <view wx:else>
+        <view class="empty-state">
+          <text class="empty-icon">🏃</text>
+          <text class="empty-text">还没有跑步记录，快去记录第一条吧~</text>
+        </view>
+      </view>
     </scroll-view>
   </view>
+  
+  <!-- 自定义底部导航栏 -->
+  <custom-tab-bar></custom-tab-bar>
 </view>

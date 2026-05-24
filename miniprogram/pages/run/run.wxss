@@ -1,36 +1,201 @@
+/* pages/run/run.wxss */
+/* 页面整体 */
 .container {
-  padding: 40rpx;
+  min-height: 100vh;
+  background: #e8f2ff;
+  padding-bottom: calc(140rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+
+/* 顶部标题栏 */
+.header {
+  background: #d6e8ff;
+  padding: 60rpx 32rpx 32rpx;
+  display: flex;
+  align-items: center;
+}
+
+.header-icon {
+  font-size: 40rpx;
+  margin-right: 16rpx;
+}
+
+.header-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #1e3a5f;
+  flex: 1;
   text-align: center;
 }
-.time-box {
-  margin: 80rpx 0;
+
+/* 跑步状态指示器 */
+.status-indicator {
+  position: fixed;
+  top: 140rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(239, 68, 68, 0.9);
+  color: #fff;
+  padding: 12rpx 28rpx;
+  border-radius: 32rpx;
+  font-size: 24rpx;
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  z-index: 100;
+  animation: blink 1s ease-in-out infinite;
 }
-.time {
+
+.status-dot {
+  width: 10rpx;
+  height: 10rpx;
+  background: #fff;
+  border-radius: 50%;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* 计时器区域 */
+.timer-section {
+  padding: 40rpx 32rpx;
+}
+
+.timer-box {
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 48rpx;
+  text-align: center;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+  margin-bottom: 32rpx;
+}
+
+.timer {
   font-size: 80rpx;
   font-weight: bold;
+  color: #2563eb;
+  display: block;
+  letter-spacing: 8rpx;
 }
-.tip {
-  font-size: 28rpx;
-  color: #999;
+
+.timer-label {
+  font-size: 26rpx;
+  color: #6b7280;
+  margin-top: 12rpx;
+  display: block;
 }
+
+/* 数据展示区域 */
+.data-section {
+  padding: 0 32rpx;
+}
+
 .info-box {
   display: flex;
-  justify-content: space-around;
-  margin-bottom: 100rpx;
+  justify-content: space-between;
+  gap: 16rpx;
+  margin-bottom: 48rpx;
 }
-.item .num {
-  font-size: 60rpx;
+
+.data-card {
+  flex: 1;
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 28rpx 20rpx;
+  text-align: center;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease;
+}
+
+.data-card:active {
+  transform: scale(0.96);
+}
+
+.data-num {
+  font-size: 36rpx;
   font-weight: bold;
+  color: #2563eb;
+  display: block;
 }
-.item .unit {
-  font-size: 26rpx;
-  color: #666;
+
+.data-unit {
+  font-size: 22rpx;
+  color: #6b7280;
+  margin-top: 8rpx;
+  display: block;
 }
+
+/* 控制按钮区域 */
+.controls-section {
+  padding: 0 32rpx;
+}
+
+.btn {
+  width: 100%;
+  border: none;
+  border-radius: 16rpx;
+  padding: 28rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  transition: all 0.2s ease;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+/* 开始按钮 */
 .start-btn {
-  background: #07c160;
+  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
   color: #fff;
+  box-shadow: 0 4rpx 16rpx rgba(59, 130, 246, 0.3);
 }
-.stop-btn {
-  background: #f53f3f;
+
+/* 暂停按钮 */
+.pause-btn {
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
   color: #fff;
+  box-shadow: 0 4rpx 16rpx rgba(245, 158, 11, 0.3);
+  margin-bottom: 16rpx;
+}
+
+/* 结束按钮 */
+.stop-btn {
+  background: #e5e7eb;
+  color: #6b7280;
+}
+
+/* 按钮组 */
+.btn-group {
+  display: flex;
+  gap: 16rpx;
+}
+
+.btn-group .btn {
+  flex: 1;
+}
+
+/* 页面淡入动画 */
+.container {
+  animation: pageFadeIn 0.4s ease;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

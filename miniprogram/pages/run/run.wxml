@@ -1,22 +1,63 @@
 <view class="container">
-  <view class="time-box">
-    <text class="time">{{timeStr}}</text>
-    <text class="tip">运动时长</text>
+  <!-- 顶部标题栏 -->
+  <view class="header">
+    <text class="header-icon">🏃</text>
+    <text class="header-title">跑步</text>
   </view>
-  <view class="info-box">
-    <view class="item">
-      <text class="num">{{distanceKm}}</text>
-      <text class="unit">公里</text>
-    </view>
-    <view class="item">
-      <text class="num">{{paceStr}}</text>
-      <text class="unit">配速</text>
-    </view>
-    <view class="item">
-      <text class="num">{{calories}}</text>
-      <text class="unit">卡路里</text>
+  
+  <!-- 跑步状态指示器 -->
+  <view wx:if="{{isRunning}}" class="status-indicator">
+    <view class="status-dot"></view>
+    <text>正在跑步中</text>
+  </view>
+  
+  <!-- 计时器区域 -->
+  <view class="timer-section">
+    <view class="timer-box">
+      <text class="timer">{{timeStr}}</text>
+      <text class="timer-label">运动时长</text>
     </view>
   </view>
-  <button wx:if="{{!isRunning}}" bindtap="startRun" class="start-btn">开始跑步</button>
-  <button wx:else bindtap="stopRun" class="stop-btn">结束跑步</button>
+  
+  <!-- 数据展示区域 -->
+  <view class="data-section">
+    <view class="info-box">
+      <view class="data-card">
+        <text class="data-num">{{distanceKm}}</text>
+        <text class="data-unit">公里</text>
+      </view>
+      <view class="data-card">
+        <text class="data-num">{{paceStr}}</text>
+        <text class="data-unit">配速</text>
+      </view>
+      <view class="data-card">
+        <text class="data-num">{{calories}}</text>
+        <text class="data-unit">卡路里</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 控制按钮区域 -->
+  <view class="controls-section">
+    <!-- 未跑步状态：显示开始按钮 -->
+    <button wx:if="{{!isRunning}}" bindtap="startRun" class="btn start-btn">
+      <text>🏃</text>
+      <text>开始跑步</text>
+    </button>
+    
+    <!-- 跑步中状态：显示暂停/结束按钮组 -->
+    <view wx:else class="btn-group">
+      <button bindtap="togglePause" class="btn pause-btn">
+        <text>{{isPaused ? '▶️' : '⏸️'}}</text>
+        <text>{{isPaused ? '继续' : '暂停'}}</text>
+      </button>
+      <button bindtap="stopRun" class="btn stop-btn">
+        <text>⏹️</text>
+        <text>结束</text>
+      </button>
+    </view>
+  </view>
+  
+  <!-- 自定义底部导航栏 -->
+  <custom-tab-bar></custom-tab-bar>
 </view>

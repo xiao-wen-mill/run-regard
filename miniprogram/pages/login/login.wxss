@@ -1,9 +1,217 @@
+/* pages/login/login.wxss */
+/* 页面整体 */
 .container {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #eff6ff 0%, #ffffff 100%);
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  height: 100vh;
+  justify-content: flex-start;
+  padding: 40rpx 32rpx;
+  padding-top: calc(100rpx + env(safe-area-inset-top));
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
 }
-button {
-  width: 200rpx;
+
+/* 背景装饰 - 跑步轨迹线条 */
+.container::before {
+  content: "";
+  position: absolute;
+  top: 10%;
+  left: 5%;
+  width: 400rpx;
+  height: 400rpx;
+  border: 3rpx solid rgba(59, 130, 246, 0.1);
+  border-radius: 50%;
+}
+
+.container::after {
+  content: "";
+  position: absolute;
+  bottom: 10%;
+  right: 5%;
+  width: 500rpx;
+  height: 500rpx;
+  border: 3rpx solid rgba(59, 130, 246, 0.08);
+  border-radius: 50%;
+}
+
+/* 装饰跑步小人 */
+.decor-runner {
+  position: absolute;
+  font-size: 40rpx;
+  opacity: 0.2;
+  animation: float 4s ease-in-out infinite;
+}
+
+.decor-runner.top-left {
+  top: 15%;
+  left: 12%;
+  animation-delay: 0s;
+}
+
+.decor-runner.top-right {
+  top: 20%;
+  right: 15%;
+  animation-delay: 1s;
+}
+
+.decor-runner.bottom-left {
+  bottom: 20%;
+  left: 15%;
+  animation-delay: 2s;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15rpx);
+  }
+}
+
+/* 卡片容器 - 几乎占满屏幕 */
+.login-card {
+  width: 100%;
+  min-height: calc(85vh - 100rpx);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20rpx);
+  border-radius: 32rpx;
+  padding: 80rpx 40rpx;
+  box-shadow: 0 12rpx 48rpx rgba(59, 130, 246, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 10;
+  animation: cardFadeIn 0.6s ease;
+  box-sizing: border-box;
+}
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 跑步小人装饰图标 */
+.runner-icon {
+  font-size: 140rpx;
+  margin-bottom: 48rpx;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-15rpx) rotate(-5deg);
+  }
+  75% {
+    transform: translateY(-15rpx) rotate(5deg);
+  }
+}
+
+/* 标题 */
+.title {
+  font-size: 56rpx;
+  font-weight: bold;
+  color: #1e3a5f;
+  margin-bottom: 24rpx;
+  letter-spacing: 6rpx;
+}
+
+/* 副标题 */
+.subtitle {
+  font-size: 32rpx;
+  color: #6b7280;
+  margin-bottom: 80rpx;
+  text-align: center;
+}
+
+/* 微信登录按钮 */
+.login-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #07c160 0%, #10b981 100%);
+  border: none;
+  border-radius: 50rpx;
+  padding: 36rpx;
+  font-size: 38rpx;
+  color: #fff;
+  box-shadow: 0 12rpx 36rpx rgba(7, 193, 96, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20rpx;
+  transition: all 0.3s ease;
+  margin-bottom: 48rpx;
+}
+
+.login-btn:active {
+  transform: scale(0.98);
+}
+
+.login-btn:hover {
+  transform: translateY(-6rpx);
+  box-shadow: 0 16rpx 48rpx rgba(7, 193, 96, 0.5);
+}
+
+/* 微信图标 */
+.wechat-icon {
+  font-size: 48rpx;
+}
+
+/* 注册提示 */
+.register-tip {
+  font-size: 30rpx;
+  color: #9ca3af;
+  text-align: center;
+}
+
+.register-tip .link {
+  color: #3b82f6;
+  text-decoration: underline;
+  margin-left: 12rpx;
+  font-weight: 500;
+}
+
+/* 底部装饰线条 */
+.bottom-decoration {
+  position: absolute;
+  bottom: 4%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 2rpx;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(59, 130, 246, 0.3),
+    transparent
+  );
+}
+
+/* 页面淡入动画 */
+.container {
+  animation: pageFadeIn 0.5s ease;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

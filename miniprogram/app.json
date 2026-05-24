@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/register/register",
     "pages/login/login",
+    "pages/register/register",
     "pages/home/home",
     "pages/run/run",
     "pages/history/history"
@@ -19,9 +19,11 @@
   },
   "requiredPrivateInfos": ["onLocationChange", "startLocationUpdate"],
   "tabBar": {
-    "color": "#999",
-    "selectedColor": "#07c160",
-    "backgroundColor": "#fff",
+    "custom": true,
+    "color": "#94A3B8",
+    "selectedColor": "#2563EB",
+    "backgroundColor": "#D6E8FF",
+    "borderStyle": "white",
     "list": [
       {
         "pagePath": "pages/home/home",
@@ -36,5 +38,8 @@
         "text": "历史"
       }
     ]
+  },
+  "usingComponents": {
+    "custom-tab-bar": "/components/custom-tab-bar/index"
   }
 }

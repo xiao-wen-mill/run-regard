@@ -1,52 +1,160 @@
+/* pages/history/history.wxss */
+/* 页面整体 */
 .container {
-  padding: 30rpx;
-  background: #f7f8fa;
   min-height: 100vh;
+  background: #e8f2ff;
+  padding-bottom: calc(140rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
 }
-.title {
+
+/* 顶部标题栏 */
+.header {
+  background: #d6e8ff;
+  padding: 60rpx 32rpx 32rpx;
+  display: flex;
+  align-items: center;
+}
+
+.header-icon {
+  font-size: 40rpx;
+  margin-right: 16rpx;
+}
+
+.header-title {
   font-size: 36rpx;
   font-weight: bold;
+  color: #1e3a5f;
+  flex: 1;
   text-align: center;
-  margin-bottom: 40rpx;
 }
+
+/* 内容区域 */
+.content {
+  padding: 24rpx;
+}
+
+/* 列表容器 */
 .list {
-  height: calc(100vh - 120rpx);
+  max-height: calc(100vh - 280rpx - env(safe-area-inset-bottom));
 }
+
+/* 列表项 */
 .item {
-  background: #fff;
+  background: #ffffff;
   border-radius: 16rpx;
-  padding: 30rpx;
+  padding: 24rpx;
   margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
 }
+
+.item:active {
+  transform: scale(0.98);
+}
+
+/* 顶部日期区域 */
 .top {
+  display: flex;
+  align-items: center;
   margin-bottom: 20rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid #f3f4f6;
 }
+
+.runner-icon {
+  font-size: 28rpx;
+  margin-right: 12rpx;
+}
+
 .date {
-  font-size: 26rpx;
-  color: #999;
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #374151;
 }
+
+/* 行容器 */
 .row {
   display: flex;
   justify-content: space-between;
-  margin: 16rpx 0;
 }
+
+.row:first-of-type {
+  margin-bottom: 12rpx;
+}
+
+/* 单元格 */
 .cell {
-  text-align: center;
-  width: 45%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12rpx 0;
 }
+
+.cell:first-child {
+  padding-left: 40rpx;
+  position: relative;
+}
+
+.cell:first-child::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4rpx;
+  height: 36rpx;
+  background: linear-gradient(180deg, #3b82f6 0%, #60a5fa 100%);
+  border-radius: 2rpx;
+}
+
+.cell:last-child {
+  align-items: flex-end;
+}
+
 .label {
-  font-size: 24rpx;
-  color: #666;
-  display: block;
-  margin-bottom: 8rpx;
+  font-size: 22rpx;
+  color: #6b7280;
+  margin-bottom: 6rpx;
 }
+
 .val {
-  font-size: 32rpx;
-  font-weight: bold;
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #1e3a5f;
 }
+
+/* 空状态 */
 .empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60rpx 32rpx;
+  margin-top: 40rpx;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+  opacity: 0.5;
+}
+
+.empty-text {
+  font-size: 26rpx;
+  color: #9ca3af;
   text-align: center;
-  margin-top: 200rpx;
-  color: #999;
-  font-size: 28rpx;
+}
+
+/* 页面淡入动画 */
+.container {
+  animation: pageFadeIn 0.4s ease;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

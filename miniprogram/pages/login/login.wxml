@@ -1,5 +1,28 @@
-<view style="padding: 100rpx;">
-  <button bindtap="handleLogin" style="background:#07c160;border-radius:12rpx;font-size:32rpx;">
-    微信一键登录
-  </button>
+<view class="container">
+  <!-- 装饰跑步小人 -->
+  <text class="decor-runner top-left">🏃</text>
+  <text class="decor-runner top-right">🏃‍♂️</text>
+  <text class="decor-runner bottom-left">🏃‍♀️</text>
+  
+  <!-- 登录卡片 -->
+  <view class="login-card">
+    <!-- 跑步小人装饰图标 -->
+    <text class="runner-icon">🏃</text>
+    
+    <!-- 标题 -->
+    <text class="title">运动助手</text>
+    <text class="subtitle">用微信登录，开启运动旅程</text>
+    
+    <!-- 微信登录按钮 -->
+    <button bindtap="handleLogin" class="login-btn">
+      <text class="wechat-icon">💚</text>
+      <text>微信一键登录</text>
+    </button>
+    
+    <!-- 注册提示 -->
+    <text class="register-tip">还没有账号？<text class="link" bindtap="goRegister">注册新用户</text></text>
+  </view>
+  
+  <!-- 底部装饰线条 -->
+  <view class="bottom-decoration"></view>
 </view>

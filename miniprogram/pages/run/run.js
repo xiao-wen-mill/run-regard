@@ -1,6 +1,7 @@
 Page({
   data: {
     isRunning: false,
+    isPaused: false,
     time: 0,
     timeStr: "00:00:00",
     distance: 0,
@@ -11,49 +12,48 @@ Page({
     startTime: null,
     gpsPoints: [],
     lastLat: 0,
-    lastLng: 0
+    lastLng: 0,
   },
 
   timer: null,
   locationWatch: null,
+  pausedTime: 0,
 
-  // 👉 我在这里加了：页面加载就强制申请定位权限
   onLoad() {
-    this.requestLocationPermission()
+    this.requestLocationPermission();
   },
 
-  // 👉 强制获取定位权限（一定会弹框）
   requestLocationPermission() {
     wx.getSetting({
       success: (res) => {
-        if (!res.authSetting['scope.userLocation']) {
+        if (!res.authSetting["scope.userLocation"]) {
           wx.authorize({
-            scope: 'scope.userLocation',
+            scope: "scope.userLocation",
             success: () => {
-              console.log("定位授权成功")
+              console.log("定位授权成功");
             },
             fail: () => {
               wx.showToast({
-                title: '请开启定位权限',
-                icon: 'none'
-              })
-            }
-          })
+                title: "请开启定位权限",
+                icon: "none",
+              });
+            },
+          });
         }
-      }
-    })
+      },
+    });
   },
 
   async startRun() {
-    const app = getApp()
-    // 先调用 login 云函数验证登录态
-    const isLoggedIn = await app.verifyLogin()
+    const app = getApp();
+    const isLoggedIn = await app.verifyLogin();
     if (!isLoggedIn) {
-      return
+      return;
     }
 
     this.setData({
       isRunning: true,
+      isPaused: false,
       time: 0,
       timeStr: "00:00:00",
       distance: 0,
@@ -64,104 +64,132 @@ Page({
       startTime: new Date().toISOString(),
       gpsPoints: [],
       lastLat: 0,
-      lastLng: 0
-    })
+      lastLng: 0,
+      pausedTime: 0,
+    });
 
-    wx.startLocationUpdate({ type: "gcj02" })
+    wx.startLocationUpdate({ type: "gcj02" });
 
     this.timer = setInterval(() => {
-      this.setData({ time: this.data.time + 1 })
-      const h = Math.floor(this.data.time / 3600)
-      const m = Math.floor((this.data.time % 3600) / 60)
-      const s = this.data.time % 60
-      this.setData({
-        timeStr: `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
-      })
-      this.calcRealTimeData()
-    }, 1000)
+      if (!this.data.isPaused) {
+        this.setData({ time: this.data.time + 1 });
+        const h = Math.floor(this.data.time / 3600);
+        const m = Math.floor((this.data.time % 3600) / 60);
+        const s = this.data.time % 60;
+        this.setData({
+          timeStr: `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`,
+        });
+        this.calcRealTimeData();
+      }
+    }, 1000);
 
-    this.locationWatch = wx.onLocationChange(res => {
+    this.locationWatch = wx.onLocationChange((res) => {
+      if (this.data.isPaused) return;
+
       const point = {
         latitude: res.latitude,
         longitude: res.longitude,
-        timestamp: Date.now()
-      }
+        timestamp: Date.now(),
+      };
       this.setData({
-        gpsPoints: [...this.data.gpsPoints, point]
-      })
+        gpsPoints: [...this.data.gpsPoints, point],
+      });
 
       if (this.data.lastLat && this.data.lastLng) {
-        const dis = this.getDistance(this.data.lastLat, this.data.lastLng, res.latitude, res.longitude)
-        const timeDiff = point.timestamp - (this.data.gpsPoints[this.data.gpsPoints.length - 2]?.timestamp || point.timestamp)
-        const speed = dis / (timeDiff / 1000)
+        const dis = this.getDistance(
+          this.data.lastLat,
+          this.data.lastLng,
+          res.latitude,
+          res.longitude,
+        );
+        const timeDiff =
+          point.timestamp -
+          (this.data.gpsPoints[this.data.gpsPoints.length - 2]?.timestamp ||
+            point.timestamp);
+        const speed = dis / (timeDiff / 1000);
         if (speed <= 10) {
-          const newDis = this.data.distance + dis
+          const newDis = this.data.distance + dis;
           this.setData({
             distance: newDis,
-            distanceKm: (newDis / 1000).toFixed(2)
-          })
+            distanceKm: (newDis / 1000).toFixed(2),
+          });
         }
       }
-      this.setData({ lastLat: res.latitude, lastLng: res.longitude })
-    })
+      this.setData({ lastLat: res.latitude, lastLng: res.longitude });
+    });
+  },
+
+  togglePause() {
+    this.setData({ isPaused: !this.data.isPaused });
+    if (this.data.isPaused) {
+      wx.pauseLocationUpdate();
+    } else {
+      wx.startLocationUpdate({ type: "gcj02" });
+    }
   },
 
   calcRealTimeData() {
-    const durationMin = this.data.time / 60
-    const distanceKm = this.data.distance / 1000
-    let paceStr = "00:00"
-    let calories = 0
-    const weight = 60
+    const durationMin = this.data.time / 60;
+    const distanceKm = this.data.distance / 1000;
+    let paceStr = "00:00";
+    let calories = 0;
+    const weight = 60;
 
     if (distanceKm > 0) {
-      const paceMin = durationMin / distanceKm
-      const pMin = Math.floor(paceMin)
-      const pSec = Math.round((paceMin - pMin) * 60)
-      paceStr = `${String(pMin).padStart(2, '0')}:${String(pSec).padStart(2, '0')}`
+      const paceMin = durationMin / distanceKm;
+      const pMin = Math.floor(paceMin);
+      const pSec = Math.round((paceMin - pMin) * 60);
+      paceStr = `${String(pMin).padStart(2, "0")}:${String(pSec).padStart(2, "0")}`;
     }
 
-    calories = Math.round(weight * distanceKm * 1.036)
-    this.setData({ paceStr, calories })
+    calories = Math.round(weight * distanceKm * 1.036);
+    this.setData({ paceStr, calories });
   },
 
   async stopRun() {
-    const app = getApp()
-    // 保存记录前先验证登录态
-    const isLoggedIn = await app.verifyLogin()
+    const app = getApp();
+    const isLoggedIn = await app.verifyLogin();
     if (!isLoggedIn) {
-      return
+      return;
     }
 
-    clearInterval(this.timer)
-    wx.offLocationChange(this.locationWatch)
-    wx.stopLocationUpdate()
-    this.setData({ isRunning: false })
+    clearInterval(this.timer);
+    wx.offLocationChange(this.locationWatch);
+    wx.stopLocationUpdate();
+    this.setData({ isRunning: false });
 
-    const endTime = new Date().toISOString()
+    const endTime = new Date().toISOString();
 
-    wx.cloud.callFunction({
-      name: "saveRunRecord",
-      data: {
-        duration: this.data.time,
-        distance: Math.round(this.data.distance),
-        calories: this.data.calories,
-        avgPace: this.data.paceStr,
-        startTime: this.data.startTime,
-        endTime: endTime,
-        gpsPoints: this.data.gpsPoints
-      }
-    }).then(res => {
-      wx.showToast({ title: "保存成功" })
-    }).catch(err => {
-      wx.showToast({ title: "保存失败", icon: "none" })
-    })
+    wx.cloud
+      .callFunction({
+        name: "saveRunRecord",
+        data: {
+          duration: this.data.time,
+          distance: Math.round(this.data.distance),
+          calories: this.data.calories,
+          avgPace: this.data.paceStr,
+          startTime: this.data.startTime,
+          endTime: endTime,
+          gpsPoints: this.data.gpsPoints,
+        },
+      })
+      .then((res) => {
+        wx.showToast({ title: "保存成功" });
+      })
+      .catch((err) => {
+        wx.showToast({ title: "保存失败", icon: "none" });
+      });
   },
 
   getDistance(lat1, lng1, lat2, lng2) {
-    const R = 6371000
-    const dLat = (lat2 - lat1) * Math.PI / 180
-    const dLng = (lng2 - lng1) * Math.PI / 180
-    const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) ** 2
-    return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)))
-  }
-})
+    const R = 6371000;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLng = ((lng2 - lng1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLng / 2) ** 2;
+    return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+  },
+});

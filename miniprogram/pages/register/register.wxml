@@ -1,24 +1,41 @@
 <view class="container">
-  <!-- 固定纯色圆形头像，无授权功能 -->
-  <view class="avatar-placeholder">
-    <text class="icon">👤</text>
-  </view>
+  <!-- 装饰跑步小人 -->
+  <text class="decor-runner">🏃</text>
+  <text class="decor-runner">🏃‍♂️</text>
+  <text class="decor-runner">🏃‍♀️</text>
+  
+  <!-- 卡片容器 -->
+  <view class="card">
+    <!-- 固定纯色圆形头像，无授权功能 -->
+    <view class="avatar-placeholder">
+      <text class="icon">🏃</text>
+    </view>
 
-  <!-- 昵称输入框 -->
-  <input class="nick-input" placeholder="请输入昵称" bindinput="onNickInput" value="{{nickName}}"/>
+    <!-- 昵称输入框 -->
+    <view class="nick-input-wrapper">
+      <input class="nick-input" placeholder="请输入你的运动昵称" bindinput="onNickInput" value="{{nickName}}"/>
+    </view>
 
-  <!-- 微信注册按钮 -->
-  <button 
-    bindtap="handleRegister" 
-    class="register-btn"
-    disabled="{{!isChecked || !nickName}}"
-  >
-    微信注册
-  </button>
+    <!-- 跑步人装饰分隔线 -->
+    <view class="divider">
+      <view class="divider-line"></view>
+      <text class="divider-icon">🏃</text>
+      <view class="divider-line"></view>
+    </view>
 
-  <!-- 勾选框（已经放在这里，样式会自动定位到80%位置） -->
-  <view class="checkbox-wrap">
-    <checkbox checked="{{isChecked}}" bindtap="toggleCheck" color="#07c160"></checkbox>
-    <text class="checkbox-text">我已阅读并同意授权信息</text>
+    <!-- 微信注册按钮 -->
+    <button 
+      bindtap="handleRegister" 
+      class="register-btn"
+      disabled="{{!isChecked || !nickName}}"
+    >
+      🏃 开始奔跑之旅
+    </button>
+
+    <!-- 勾选框 -->
+    <view class="checkbox-wrap">
+      <checkbox checked="{{isChecked}}" bindtap="toggleCheck" color="#3B82F6"></checkbox>
+      <text class="checkbox-text">我已阅读并同意<text class="link">授权信息</text></text>
+    </view>
   </view>
 </view>

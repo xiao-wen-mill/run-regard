@@ -1,0 +1,31 @@
+<view class="custom-tab-bar">
+  <view 
+    wx:for="{{tabs}}" 
+    wx:key="path" 
+    class="tab-item"
+    data-path="{{item.path}}"
+    data-key="{{item.key}}"
+    bindtap="switchTab"
+  >
+    <view class="tab-icon">
+      <!-- 首页图标 -->
+      <view wx:if="{{item.key === 'home'}}" class="icon-home">
+        <view class="home-house {{currentKey === 'home' ? 'active' : ''}}"></view>
+      </view>
+      <!-- 跑步图标 -->
+      <view wx:if="{{item.key === 'run'}}" class="icon-run">
+        <view class="run-person {{currentKey === 'run' ? 'active' : ''}}">
+          <view class="arm-l"></view>
+          <view class="arm-r"></view>
+          <view class="leg-l"></view>
+          <view class="leg-r"></view>
+        </view>
+      </view>
+      <!-- 历史图标 -->
+      <view wx:if="{{item.key === 'history'}}" class="icon-history">
+        <view class="history-cal {{currentKey === 'history' ? 'active' : ''}}"></view>
+      </view>
+    </view>
+    <text class="tab-text {{currentKey === item.key ? 'active' : ''}}">{{item.text}}</text>
+  </view>
+</view>
