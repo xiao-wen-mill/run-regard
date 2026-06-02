@@ -42,7 +42,7 @@
       <view wx:for="{{historyList}}" wx:key="_id" class="history-item">
         <view class="history-info">
           <text class="history-date">{{item.createTime}}</text>
-          <text class="history-detail">{{item.duration}}分钟 · {{item.distance}}公里</text>
+          <text class="history-detail">{{item.durationMin}}分钟 · {{item.distanceKm}}公里</text>
         </view>
         <text class="history-calories">{{item.calories}}千卡</text>
       </view>

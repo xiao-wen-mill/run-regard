@@ -16,6 +16,11 @@ Page({
     })
     db.collection('run_records').orderBy('createTime', 'desc').get().then(res => {
       wx.hideLoading()
+      res.data.forEach(item => {
+        let minutes = Math.floor(item.duration / 60);
+        let seconds = item.duration % 60;
+        item.durationText = minutes + "分" + seconds + "秒";
+      });
       that.setData({
         recordList: res.data
       })

@@ -18,7 +18,13 @@ Page({
 
   getUserInfo() {
     const userInfo = getApp().globalData.userInfo || {};
-    this.setData({ userInfo });
+    // 单位转换：米 -> 公里，秒 -> 分钟
+    const processedUserInfo = {
+      ...userInfo,
+      totalDistance: userInfo.totalDistance ? (userInfo.totalDistance / 1000).toFixed(2) : '0',
+      totalDuration: userInfo.totalDuration ? (userInfo.totalDuration / 60).toFixed(1) : '0',
+    };
+    this.setData({ userInfo: processedUserInfo });
   },
 
   // 跳转到跑步页面
@@ -43,6 +49,8 @@ Page({
           const newList = res.result.data.map((item) => ({
             ...item,
             createTime: this.formatTime(item.createTime),
+            durationMin: (item.duration / 60).toFixed(1),
+            distanceKm: (item.distance / 1000).toFixed(2),
           }));
 
           this.setData({

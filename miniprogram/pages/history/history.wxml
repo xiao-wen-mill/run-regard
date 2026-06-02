@@ -16,7 +16,7 @@
         <view class="row">
           <view class="cell">
             <text class="label">时长</text>
-            <text class="val">{{formatTime(item.duration)}}</text>
+            <text class="val">{{item.durationText}}</text>
           </view>
           <view class="cell">
             <text class="label">距离</text>
