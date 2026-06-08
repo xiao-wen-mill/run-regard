@@ -10,6 +10,7 @@ Page({
     paceStr: "00:00",
     calories: 0,
     startTime: null,
+    startTimestamp: 0,
     gpsPoints: [],
     lastLat: 0,
     lastLng: 0,
@@ -18,6 +19,8 @@ Page({
   timer: null,
   locationWatch: null,
   pausedTime: 0,
+  pauseStartTime: 0,
+  totalPausedTime: 0,
 
   onLoad() {
     this.requestLocationPermission();
@@ -62,20 +65,27 @@ Page({
       paceStr: "00:00",
       calories: 0,
       startTime: new Date().toISOString(),
+      startTimestamp: Date.now(),
       gpsPoints: [],
       lastLat: 0,
       lastLng: 0,
-      pausedTime: 0,
     });
+
+    this.pauseStartTime = 0;
+    this.totalPausedTime = 0;
 
     wx.startLocationUpdate({ type: "gcj02" });
 
     this.timer = setInterval(() => {
       if (!this.data.isPaused) {
-        this.setData({ time: this.data.time + 1 });
-        const h = Math.floor(this.data.time / 3600);
-        const m = Math.floor((this.data.time % 3600) / 60);
-        const s = this.data.time % 60;
+        // 使用时间戳差值计算实际运行时间
+        const elapsed = Math.floor(
+          (Date.now() - this.data.startTimestamp - this.totalPausedTime) / 1000,
+        );
+        this.setData({ time: elapsed });
+        const h = Math.floor(elapsed / 3600);
+        const m = Math.floor((elapsed % 3600) / 60);
+        const s = elapsed % 60;
         this.setData({
           timeStr: `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`,
         });
@@ -122,8 +132,13 @@ Page({
   togglePause() {
     this.setData({ isPaused: !this.data.isPaused });
     if (this.data.isPaused) {
+      // 记录暂停开始时间
+      this.pauseStartTime = Date.now();
       wx.pauseLocationUpdate();
     } else {
+      // 累计暂停时间
+      this.totalPausedTime += Date.now() - this.pauseStartTime;
+      this.pauseStartTime = 0;
       wx.startLocationUpdate({ type: "gcj02" });
     }
   },
