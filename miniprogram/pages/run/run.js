@@ -21,6 +21,7 @@ Page({
   pausedTime: 0,
   pauseStartTime: 0,
   totalPausedTime: 0,
+  lastUpdateTime: 0,
 
   onLoad() {
     this.requestLocationPermission();
@@ -74,7 +75,11 @@ Page({
     this.pauseStartTime = 0;
     this.totalPausedTime = 0;
 
-    wx.startLocationUpdate({ type: "gcj02" });
+    // 请求后台定位权限
+    this.requestBackgroundLocationPermission();
+
+    // 使用后台持续定位，确保后台也能获取位置更新
+    wx.startLocationUpdateBackground({ type: "gcj02" });
 
     this.timer = setInterval(() => {
       if (!this.data.isPaused) {
@@ -101,6 +106,19 @@ Page({
         longitude: res.longitude,
         timestamp: Date.now(),
       };
+
+      // 更新时间（使用位置回调来校准时间，避免定时器暂停问题）
+      const elapsed = Math.floor(
+        (point.timestamp - this.data.startTimestamp - this.totalPausedTime) / 1000,
+      );
+      this.setData({ time: elapsed });
+      const h = Math.floor(elapsed / 3600);
+      const m = Math.floor((elapsed % 3600) / 60);
+      const s = elapsed % 60;
+      this.setData({
+        timeStr: `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`,
+      });
+
       this.setData({
         gpsPoints: [...this.data.gpsPoints, point],
       });
@@ -117,7 +135,8 @@ Page({
           (this.data.gpsPoints[this.data.gpsPoints.length - 2]?.timestamp ||
             point.timestamp);
         const speed = dis / (timeDiff / 1000);
-        if (speed <= 10) {
+        // 放宽速度限制，允许更高的瞬时速度
+        if (speed <= 15) {
           const newDis = this.data.distance + dis;
           this.setData({
             distance: newDis,
@@ -126,6 +145,28 @@ Page({
         }
       }
       this.setData({ lastLat: res.latitude, lastLng: res.longitude });
+      this.calcRealTimeData();
+    });
+  },
+
+  requestBackgroundLocationPermission() {
+    wx.getSetting({
+      success: (res) => {
+        if (!res.authSetting["scope.userLocationBackground"]) {
+          wx.authorize({
+            scope: "scope.userLocationBackground",
+            success: () => {
+              console.log("后台定位授权成功");
+            },
+            fail: () => {
+              wx.showToast({
+                title: "请开启后台定位权限",
+                icon: "none",
+              });
+            },
+          });
+        }
+      },
     });
   },
 
@@ -139,7 +180,7 @@ Page({
       // 累计暂停时间
       this.totalPausedTime += Date.now() - this.pauseStartTime;
       this.pauseStartTime = 0;
-      wx.startLocationUpdate({ type: "gcj02" });
+      wx.startLocationUpdateBackground({ type: "gcj02" });
     }
   },
 
@@ -173,6 +214,18 @@ Page({
     wx.stopLocationUpdate();
     this.setData({ isRunning: false });
 
+    // 停止后再次校准时间，确保时间准确
+    const elapsed = Math.floor(
+      (Date.now() - this.data.startTimestamp - this.totalPausedTime) / 1000,
+    );
+    this.setData({ time: elapsed });
+    const h = Math.floor(elapsed / 3600);
+    const m = Math.floor((elapsed % 3600) / 60);
+    const s = elapsed % 60;
+    this.setData({
+      timeStr: `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`,
+    });
+
     const endTime = new Date().toISOString();
 
     wx.cloud
@@ -203,8 +256,8 @@ Page({
     const a =
       Math.sin(dLat / 2) ** 2 +
       Math.cos((lat1 * Math.PI) / 180) *
-        Math.cos((lat2 * Math.PI) / 180) *
-        Math.sin(dLng / 2) ** 2;
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) ** 2;
     return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
   },
 });
