@@ -20,13 +20,13 @@
           </view>
           <view class="cell">
             <text class="label">距离</text>
-            <text class="val">{{distanceKm(item.distance)}} km</text>
+            <text class="val">{{item.distanceText}}</text>
           </view>
         </view>
         <view class="row">
           <view class="cell">
             <text class="label">配速</text>
-            <text class="val">{{formatPace(item.avgPace)}} /km</text>
+            <text class="val">{{item.paceText}}</text>
           </view>
           <view class="cell">
             <text class="label">卡路里</text>
