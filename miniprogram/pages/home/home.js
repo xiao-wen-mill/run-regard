@@ -1,4 +1,5 @@
-// pages/home.js
+const db = wx.cloud.database();
+
 Page({
   data: {
     userInfo: {},
@@ -6,81 +7,90 @@ Page({
     page: 1,
     pageSize: 20,
     hasMore: true,
+    totalDistance: 0,
+    totalRunCount: 0,
   },
 
   onLoad() {
+    this.loadRunHistory();
   },
 
   onShow() {
     this.getUserInfo();
-    this.setData({
-      page: 1,
-      hasMore: true,
-      historyList: [],
-    });
-    this.loadRunHistory(true);
   },
 
   getUserInfo() {
-    const globalUserInfo = getApp().globalData.userInfo || {};
-    const currentUserInfo = this.data.userInfo || {};
-    this.setData({
-      userInfo: {
-        ...currentUserInfo,
-        nickName: globalUserInfo.nickName || '微信用户',
-        avatarUrl: globalUserInfo.avatarUrl || '',
-      },
-    });
+    const app = getApp();
+    const u = app.globalData.userInfo;
+    if (u && u.nickName) {
+      this.setData({
+        userInfo: {
+          ...u,
+          totalDistance: u.totalDistance ? u.totalDistance.toFixed(2) : "0",
+        },
+      });
+    }
   },
 
-  // 跳转到跑步页面
   goToRun() {
     wx.switchTab({ url: "/pages/run/run" });
   },
 
-  // 加载跑步历史
+  goToEditProfile() {
+    wx.navigateTo({ url: "/pages/register/register" });
+  },
+
   loadRunHistory(isRefresh = false) {
     const { page, pageSize, historyList } = this.data;
     const currentPage = isRefresh ? 1 : page;
+    const skip = (currentPage - 1) * pageSize;
 
     wx.showLoading({ title: "加载中..." });
-    wx.cloud
-      .callFunction({
-        name: "get-history",
-        data: { page: currentPage, pageSize },
-      })
+    db.collection("run_records")
+      .orderBy("createTime", "desc")
+      .skip(skip)
+      .limit(pageSize)
+      .get()
       .then((res) => {
         wx.hideLoading();
-        if (res.result.success) {
-          const newList = res.result.data.map((item) => ({
-            ...item,
-            createTime: this.formatTime(item.createTime),
-            durationMin: (item.duration / 60).toFixed(1),
-            distanceKm: (item.distance / 1000).toFixed(2),
-          }));
+        const newList = res.data.map((item) => ({
+          ...item,
+          createTime: this.formatTime(item.createTime),
+          durationText: this.formatDuration(item.duration),
+          distanceKm: (item.distance / 1000).toFixed(2),
+        }));
 
-          const mergedList = isRefresh ? newList : [...historyList, ...newList];
-
-          const stats = res.result.stats || {};
-          const totalKm = ((stats.totalDistance || 0) / 1000).toFixed(2);
-          const totalRunCount = stats.totalRunCount || 0;
-
-          const userInfo = {
-            ...(this.data.userInfo || {}),
-            totalDistance: totalKm,
-            totalRunCount: totalRunCount,
-          };
-
-          this.setData({
-            historyList: mergedList,
-            page: currentPage + 1,
-            hasMore: res.result.hasMore,
-            userInfo: userInfo,
-          });
+        if (isRefresh || currentPage === 1) {
+          this.calculateTotals(res.data);
         }
+
+        this.setData({
+          historyList: isRefresh ? newList : [...historyList, ...newList],
+          page: currentPage + 1,
+          hasMore: newList.length >= pageSize,
+        });
       })
       .catch(() => {
         wx.hideLoading();
+      });
+  },
+
+  calculateTotals(records) {
+    db.collection("run_records")
+      .get()
+      .then((res) => {
+        let totalDistance = 0;
+        let totalRunCount = 0;
+
+        res.data.forEach((item) => {
+          totalDistance += item.distance || 0;
+          totalRunCount++;
+        });
+
+        this.setData({
+          totalDistance: (totalDistance / 1000).toFixed(2),
+          totalRunCount: totalRunCount,
+        });
       });
   },
 
@@ -97,5 +107,12 @@ Page({
     const hour = String(date.getHours()).padStart(2, "0");
     const minute = String(date.getMinutes()).padStart(2, "0");
     return `${year}-${month}-${day} ${hour}:${minute}`;
+  },
+
+  formatDuration(seconds) {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
   },
 });

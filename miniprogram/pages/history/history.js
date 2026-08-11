@@ -1,68 +1,87 @@
+const db = wx.cloud.database();
+
 Page({
   data: {
     recordList: [],
-    page: 1,
-    pageSize: 100,
-    hasMore: false,
   },
 
-  onShow() {
-    this.setData({
-      page: 1,
-      hasMore: false,
-      recordList: [],
+  onShow: function () {
+    this.getRunRecords();
+  },
+
+  getRunRecords: function () {
+    var that = this;
+    wx.showLoading({
+      title: "加载中...",
     });
-    this.loadHistory();
-  },
-
-  loadHistory() {
-    wx.showLoading({ title: '加载中...' });
-    wx.cloud.callFunction({
-      name: 'get-history',
-      data: { page: 1, pageSize: this.data.pageSize },
-    }).then((res) => {
-      wx.hideLoading();
-      if (res.result && res.result.success) {
-        const list = res.result.data.map((item) => ({
-          ...item,
-          durationText: this.formatDuration(item.duration),
-          distanceKm: (item.distance / 1000).toFixed(2),
-          paceText: this.formatPace(item.avgPace),
-          createTimeText: this.formatTime(item.createTime),
-        }));
-        this.setData({
-          recordList: list,
-          hasMore: res.result.hasMore,
+    db.collection("run_records")
+      .orderBy("createTime", "desc")
+      .get()
+      .then((res) => {
+        wx.hideLoading();
+        console.log("获取到的跑步记录数量:", res.data.length);
+        res.data.forEach((item, index) => {
+          console.log(
+            `记录${index}: avgPace=${item.avgPace}, distance=${item.distance}, duration=${item.duration}`,
+          );
         });
-      }
-    }).catch((err) => {
-      wx.hideLoading();
-      console.error('加载历史失败：', err);
-    });
+        var newList = res.data.map((item) => {
+          let duration = item.duration || 0;
+          let minutes = Math.floor(duration / 60);
+          let seconds = duration % 60;
+
+          let avgPace = item.avgPace || 0;
+          if (avgPace === 0 && item.distance > 0 && duration > 0) {
+            avgPace = Math.round(duration / (item.distance / 1000));
+            console.log(
+              `计算配速: duration=${duration}, distance=${item.distance}, avgPace=${avgPace}`,
+            );
+          }
+
+          return {
+            ...item,
+            durationText: minutes + "分" + seconds + "秒",
+            createTime: that.formatDateTime(item.createTime),
+            distanceText: that.distanceKm(item.distance || 0) + " km",
+            paceText: that.formatPace(avgPace) + " /km",
+            calories: item.calories || 0,
+          };
+        });
+        that.setData({
+          recordList: newList,
+        });
+      })
+      .catch((err) => {
+        wx.hideLoading();
+        console.error(err);
+      });
   },
 
-  formatDuration(seconds) {
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = seconds % 60;
-    if (h > 0) {
-      return `${h}时${m}分${s}秒`;
-    }
-    return `${m}分${s}秒`;
-  },
-
-  formatPace(pace) {
-    if (!pace) return '00:00';
-    return pace;
-  },
-
-  formatTime(timestamp) {
+  formatDateTime: function (timestamp) {
     const date = new Date(timestamp);
-    const y = date.getFullYear();
-    const m = String(date.getMonth() + 1).padStart(2, '0');
-    const d = String(date.getDate()).padStart(2, '0');
-    const h = String(date.getHours()).padStart(2, '0');
-    const min = String(date.getMinutes()).padStart(2, '0');
-    return `${y}-${m}-${d} ${h}:${min}`;
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hour = String(date.getHours()).padStart(2, "0");
+    const minute = String(date.getMinutes()).padStart(2, "0");
+    return `${year}-${month}-${day} ${hour}:${minute}`;
+  },
+
+  formatTime: function (s) {
+    var h = Math.floor(s / 3600);
+    var m = Math.floor((s % 3600) / 60);
+    var sec = s % 60;
+    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+  },
+
+  formatPace: function (sec) {
+    if (!sec) return "00:00";
+    var m = Math.floor(sec / 60);
+    var s = sec % 60;
+    return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  },
+
+  distanceKm: function (m) {
+    return (m / 1000).toFixed(2);
   },
 });

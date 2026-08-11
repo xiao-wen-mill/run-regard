@@ -18,28 +18,57 @@ Page({
 
   timer: null,
   locationWatch: null,
-  totalPausedTime: 0,
+  pausedTime: 0,
   pauseStartTime: 0,
+  totalPausedTime: 0,
+  lastUpdateTime: 0,
 
   onLoad() {
+    this.requestLocationPermission();
   },
 
-  onShow() {
-  },
-
-  onUnload() {
-    if (this.data.isRunning) {
-      wx.setKeepScreenOn({ keepScreenOn: false });
-      clearInterval(this.timer);
-      wx.offLocationChange(this.locationWatch);
-      wx.stopLocationUpdate();
-    }
+  requestLocationPermission() {
+    wx.getSetting({
+      success: (res) => {
+        if (!res.authSetting["scope.userLocation"]) {
+          wx.authorize({
+            scope: "scope.userLocation",
+            success: () => {
+              console.log("定位授权成功");
+            },
+            fail: () => {
+              wx.showToast({
+                title: "请开启定位权限",
+                icon: "none",
+              });
+            },
+          });
+        }
+      },
+    });
   },
 
   async startRun() {
     const app = getApp();
     const isLoggedIn = await app.verifyLogin();
     if (!isLoggedIn) {
+      return;
+    }
+
+    const userInfo = app.globalData.userInfo || {};
+    const weight = userInfo.weight;
+    if (!weight || weight <= 0) {
+      wx.showModal({
+        title: "提示",
+        content: "请先完善个人信息（体重）",
+        confirmText: "去完善",
+        cancelText: "取消",
+        success: (res) => {
+          if (res.confirm) {
+            wx.redirectTo({ url: "/pages/register/register" });
+          }
+        },
+      });
       return;
     }
 
@@ -63,11 +92,15 @@ Page({
     this.pauseStartTime = 0;
     this.totalPausedTime = 0;
 
-    wx.setKeepScreenOn({ keepScreenOn: true });
-    wx.startLocationUpdate({ type: "gcj02" });
+    // 请求后台定位权限
+    this.requestBackgroundLocationPermission();
+
+    // 使用后台持续定位，确保后台也能获取位置更新
+    wx.startLocationUpdateBackground({ type: "gcj02" });
 
     this.timer = setInterval(() => {
       if (!this.data.isPaused) {
+        // 使用时间戳差值计算实际运行时间
         const elapsed = Math.floor(
           (Date.now() - this.data.startTimestamp - this.totalPausedTime) / 1000,
         );
@@ -91,8 +124,10 @@ Page({
         timestamp: Date.now(),
       };
 
+      // 更新时间（使用位置回调来校准时间，避免定时器暂停问题）
       const elapsed = Math.floor(
-        (point.timestamp - this.data.startTimestamp - this.totalPausedTime) / 1000,
+        (point.timestamp - this.data.startTimestamp - this.totalPausedTime) /
+          1000,
       );
       this.setData({ time: elapsed });
       const h = Math.floor(elapsed / 3600);
@@ -118,6 +153,7 @@ Page({
           (this.data.gpsPoints[this.data.gpsPoints.length - 2]?.timestamp ||
             point.timestamp);
         const speed = dis / (timeDiff / 1000);
+        // 放宽速度限制，允许更高的瞬时速度
         if (speed <= 15) {
           const newDis = this.data.distance + dis;
           this.setData({
@@ -131,15 +167,38 @@ Page({
     });
   },
 
+  requestBackgroundLocationPermission() {
+    wx.getSetting({
+      success: (res) => {
+        if (!res.authSetting["scope.userLocationBackground"]) {
+          wx.authorize({
+            scope: "scope.userLocationBackground",
+            success: () => {
+              console.log("后台定位授权成功");
+            },
+            fail: () => {
+              wx.showToast({
+                title: "请开启后台定位权限",
+                icon: "none",
+              });
+            },
+          });
+        }
+      },
+    });
+  },
+
   togglePause() {
     this.setData({ isPaused: !this.data.isPaused });
     if (this.data.isPaused) {
+      // 记录暂停开始时间
       this.pauseStartTime = Date.now();
       wx.pauseLocationUpdate();
     } else {
+      // 累计暂停时间
       this.totalPausedTime += Date.now() - this.pauseStartTime;
       this.pauseStartTime = 0;
-      wx.startLocationUpdate({ type: "gcj02" });
+      wx.startLocationUpdateBackground({ type: "gcj02" });
     }
   },
 
@@ -147,8 +206,9 @@ Page({
     const durationMin = this.data.time / 60;
     const distanceKm = this.data.distance / 1000;
     let paceStr = "00:00";
-    let calories = 0;
-    const weight = 60;
+    const app = getApp();
+    const weight =
+      (app.globalData.userInfo && app.globalData.userInfo.weight) || 60;
 
     if (distanceKm > 0) {
       const paceMin = durationMin / distanceKm;
@@ -157,7 +217,7 @@ Page({
       paceStr = `${String(pMin).padStart(2, "0")}:${String(pSec).padStart(2, "0")}`;
     }
 
-    calories = Math.round(weight * distanceKm * 1.036);
+    const calories = Math.round(weight * distanceKm * 1.036);
     this.setData({ paceStr, calories });
   },
 
@@ -171,9 +231,9 @@ Page({
     clearInterval(this.timer);
     wx.offLocationChange(this.locationWatch);
     wx.stopLocationUpdate();
-    wx.setKeepScreenOn({ keepScreenOn: false });
     this.setData({ isRunning: false });
 
+    // 停止后再次校准时间，确保时间准确
     const elapsed = Math.floor(
       (Date.now() - this.data.startTimestamp - this.totalPausedTime) / 1000,
     );
@@ -189,7 +249,7 @@ Page({
 
     wx.cloud
       .callFunction({
-        name: "save-run-record",
+        name: "saveRunRecord",
         data: {
           duration: this.data.time,
           distance: Math.round(this.data.distance),
@@ -215,8 +275,8 @@ Page({
     const a =
       Math.sin(dLat / 2) ** 2 +
       Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLng / 2) ** 2;
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLng / 2) ** 2;
     return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
   },
 });
