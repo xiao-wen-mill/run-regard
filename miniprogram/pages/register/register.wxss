@@ -273,6 +273,79 @@
   text-decoration: underline;
 }
 
+/* 表单项通用样式 */
+.form-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 32rpx;
+}
+
+.form-label {
+  width: 120rpx;
+  font-size: 30rpx;
+  color: #374151;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.form-input-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: #f0f7ff;
+  border-radius: 20rpx;
+  border: 3rpx solid #bfdbfe;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.form-input-wrapper:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 6rpx rgba(59, 130, 246, 0.15);
+  background: #fff;
+}
+
+.form-input {
+  flex: 1;
+  padding: 24rpx 28rpx;
+  font-size: 32rpx;
+  color: #1f2937;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.form-unit {
+  padding-right: 28rpx;
+  font-size: 28rpx;
+  color: #6b7280;
+}
+
+/* 性别选择 */
+.gender-group {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: #f0f7ff;
+  border-radius: 20rpx;
+  border: 3rpx solid #bfdbfe;
+  padding: 16rpx 28rpx;
+}
+
+.gender-item {
+  display: flex;
+  align-items: center;
+  margin-right: 48rpx;
+  font-size: 32rpx;
+  color: #374151;
+}
+
+.gender-item radio {
+  margin-right: 12rpx;
+  transform: scale(1.2);
+}
+
 /* 页面淡入动画 */
 .container {
   animation: fadeIn 0.5s ease;

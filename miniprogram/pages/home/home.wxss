@@ -69,6 +69,57 @@
   margin-bottom: 12rpx;
 }
 
+.profile-detail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-bottom: 16rpx;
+}
+
+.detail-chip {
+  display: inline-flex;
+  align-items: center;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 22rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+.detail-chip .chip-icon {
+  margin-right: 6rpx;
+  font-weight: bold;
+}
+
+.detail-chip.missing {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.chip-missing-text {
+  font-size: 20rpx;
+}
+
+.edit-entry {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 12rpx;
+  padding: 8rpx 20rpx;
+  background: #f0f7ff;
+  border-radius: 20rpx;
+  border: 1rpx solid #bfdbfe;
+}
+
+.edit-icon {
+  font-size: 22rpx;
+  margin-right: 8rpx;
+}
+
+.edit-text {
+  font-size: 22rpx;
+  color: #2563eb;
+}
+
 .stats-row {
   display: flex;
   gap: 40rpx;
