@@ -1,6 +1,5 @@
 const db = wx.cloud.database();
 
-// pages/home.js
 Page({
   data: {
     userInfo: {},
@@ -21,21 +20,24 @@ Page({
   },
 
   getUserInfo() {
-    const userInfo = getApp().globalData.userInfo || {};
-    const processedUserInfo = {
-      ...userInfo,
-      totalDistance: userInfo.totalDistance
-        ? userInfo.totalDistance.toFixed(2)
-        : "0",
-      totalDuration: userInfo.totalDuration
-        ? (userInfo.totalDuration / 60).toFixed(1)
-        : "0",
-    };
-    this.setData({ userInfo: processedUserInfo });
+    const app = getApp();
+    const u = app.globalData.userInfo;
+    if (u && u.nickName) {
+      this.setData({
+        userInfo: {
+          ...u,
+          totalDistance: u.totalDistance ? u.totalDistance.toFixed(2) : "0",
+        },
+      });
+    }
   },
 
   goToRun() {
     wx.switchTab({ url: "/pages/run/run" });
+  },
+
+  goToEditProfile() {
+    wx.navigateTo({ url: "/pages/register/register" });
   },
 
   loadRunHistory(isRefresh = false) {

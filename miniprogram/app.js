@@ -3,10 +3,14 @@ App({
     userInfo: null,
   },
   onLaunch() {
-    wx.cloud.init({
-      env: "cloud1-3gihncdf6bc91351",
-      traceUser: true,
-    });
+    try {
+      wx.cloud.init({
+        env: "cloud1-3gihncdf6bc91351",
+        traceUser: true,
+      });
+    } catch (e) {
+      console.error("云开发初始化失败:", e);
+    }
     // 👉 开发测试阶段暂时注释掉自动登录验证，方便在模拟器查看登录/注册页面
     // this.checkUserRegistration()
   },

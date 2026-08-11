@@ -6,7 +6,7 @@
   
   <!-- 卡片容器 -->
   <view class="card">
-    <!-- 固定纯色圆形头像，无授权功能 -->
+    <!-- 固定纯色圆形头像 -->
     <view class="avatar-placeholder">
       <text class="icon">🏃</text>
     </view>
@@ -16,6 +16,48 @@
       <input class="nick-input" placeholder="请输入你的运动昵称" bindinput="onNickInput" value="{{nickName}}"/>
     </view>
 
+    <!-- 性别选择 -->
+    <view class="form-row">
+      <text class="form-label">性别</text>
+      <radio-group class="gender-group" bindchange="onGenderChange">
+        <label class="gender-item">
+          <radio value="男" color="#3B82F6" checked="{{gender === '男'}}"/>
+          <text>男</text>
+        </label>
+        <label class="gender-item">
+          <radio value="女" color="#3B82F6" checked="{{gender === '女'}}"/>
+          <text>女</text>
+        </label>
+      </radio-group>
+    </view>
+
+    <!-- 年龄输入 -->
+    <view class="form-row">
+      <text class="form-label">年龄</text>
+      <view class="form-input-wrapper">
+        <input class="form-input" type="number" placeholder="请输入年龄" bindinput="onAgeInput" value="{{age}}"/>
+        <text class="form-unit">岁</text>
+      </view>
+    </view>
+
+    <!-- 身高输入 -->
+    <view class="form-row">
+      <text class="form-label">身高</text>
+      <view class="form-input-wrapper">
+        <input class="form-input" type="number" placeholder="请输入身高" bindinput="onHeightInput" value="{{height}}"/>
+        <text class="form-unit">cm</text>
+      </view>
+    </view>
+
+    <!-- 体重输入 -->
+    <view class="form-row">
+      <text class="form-label">体重</text>
+      <view class="form-input-wrapper">
+        <input class="form-input" type="number" placeholder="请输入体重" bindinput="onWeightInput" value="{{weight}}"/>
+        <text class="form-unit">kg</text>
+      </view>
+    </view>
+
     <!-- 跑步人装饰分隔线 -->
     <view class="divider">
       <view class="divider-line"></view>
@@ -23,13 +65,14 @@
       <view class="divider-line"></view>
     </view>
 
-    <!-- 微信注册按钮 -->
+    <!-- 按钮：注册模式 vs 编辑模式 -->
     <button 
       bindtap="handleRegister" 
       class="register-btn"
-      disabled="{{!isChecked || !nickName}}"
+      disabled="{{!isChecked || !nickName || !gender || !age || !height || !weight}}"
     >
-      🏃 开始奔跑之旅
+      <block wx:if="{{isEditMode}}">💾 保存资料</block>
+      <block wx:else>🏃 开始奔跑之旅</block>
     </button>
 
     <!-- 勾选框 -->

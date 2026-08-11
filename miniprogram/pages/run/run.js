@@ -55,6 +55,23 @@ Page({
       return;
     }
 
+    const userInfo = app.globalData.userInfo || {};
+    const weight = userInfo.weight;
+    if (!weight || weight <= 0) {
+      wx.showModal({
+        title: "提示",
+        content: "请先完善个人信息（体重）",
+        confirmText: "去完善",
+        cancelText: "取消",
+        success: (res) => {
+          if (res.confirm) {
+            wx.redirectTo({ url: "/pages/register/register" });
+          }
+        },
+      });
+      return;
+    }
+
     this.setData({
       isRunning: true,
       isPaused: false,
@@ -109,7 +126,8 @@ Page({
 
       // 更新时间（使用位置回调来校准时间，避免定时器暂停问题）
       const elapsed = Math.floor(
-        (point.timestamp - this.data.startTimestamp - this.totalPausedTime) / 1000,
+        (point.timestamp - this.data.startTimestamp - this.totalPausedTime) /
+          1000,
       );
       this.setData({ time: elapsed });
       const h = Math.floor(elapsed / 3600);
@@ -188,8 +206,9 @@ Page({
     const durationMin = this.data.time / 60;
     const distanceKm = this.data.distance / 1000;
     let paceStr = "00:00";
-    let calories = 0;
-    const weight = 60;
+    const app = getApp();
+    const weight =
+      (app.globalData.userInfo && app.globalData.userInfo.weight) || 60;
 
     if (distanceKm > 0) {
       const paceMin = durationMin / distanceKm;
@@ -198,7 +217,7 @@ Page({
       paceStr = `${String(pMin).padStart(2, "0")}:${String(pSec).padStart(2, "0")}`;
     }
 
-    calories = Math.round(weight * distanceKm * 1.036);
+    const calories = Math.round(weight * distanceKm * 1.036);
     this.setData({ paceStr, calories });
   },
 
@@ -256,8 +275,8 @@ Page({
     const a =
       Math.sin(dLat / 2) ** 2 +
       Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLng / 2) ** 2;
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLng / 2) ** 2;
     return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
   },
 });
