@@ -40,10 +40,12 @@
   <!-- 控制按钮区域 -->
   <view class="controls-section">
     <!-- 未跑步状态：显示开始按钮 -->
-    <button wx:if="{{!isRunning}}" bindtap="startRun" class="btn start-btn">
-      <text>🏃</text>
-      <text>开始跑步</text>
-    </button>
+    <block wx:if="{{!isRunning}}">
+      <button bindtap="startRun" class="btn start-btn">
+        <text>🏃</text>
+        <text>开始跑步</text>
+      </button>
+    </block>
     
     <!-- 跑步中状态：显示暂停/结束按钮组 -->
     <view wx:else class="btn-group">

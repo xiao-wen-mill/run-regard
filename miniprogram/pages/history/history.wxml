@@ -1,17 +1,15 @@
 <view class="container">
-  <!-- 顶部标题栏 -->
   <view class="header">
     <text class="header-icon">📋</text>
     <text class="header-title">跑步历史</text>
   </view>
 
-  <!-- 内容区域 -->
   <view class="content">
     <scroll-view scroll-y class="list">
       <view wx:for="{{recordList}}" wx:key="_id" class="item">
         <view class="top">
           <text class="runner-icon">🏃</text>
-          <text class="date">{{item.createTime}}</text>
+          <text class="date">{{item.createTimeText}}</text>
         </view>
         <view class="row">
           <view class="cell">
@@ -20,13 +18,13 @@
           </view>
           <view class="cell">
             <text class="label">距离</text>
-            <text class="val">{{distanceKm(item.distance)}} km</text>
+            <text class="val">{{item.distanceKm}} km</text>
           </view>
         </view>
         <view class="row">
           <view class="cell">
             <text class="label">配速</text>
-            <text class="val">{{formatPace(item.avgPace)}} /km</text>
+            <text class="val">{{item.paceText}} /km</text>
           </view>
           <view class="cell">
             <text class="label">卡路里</text>
@@ -42,6 +40,5 @@
     </scroll-view>
   </view>
   
-  <!-- 自定义底部导航栏 -->
   <custom-tab-bar></custom-tab-bar>
 </view>

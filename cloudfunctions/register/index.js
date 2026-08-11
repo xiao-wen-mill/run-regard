@@ -5,7 +5,7 @@ const db = cloud.database()
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
   const openid = wxContext.OPENID
-  const { nickName, avatarUrl } = event
+  const { nickName, avatarUrl, gender, age, height, weight } = event
 
   const exist = await db.collection('users').where({ openid }).get()
   if (exist.data.length > 0) {
@@ -17,8 +17,10 @@ exports.main = async (event, context) => {
       openid,
       nickName: nickName || '微信用户',
       avatarUrl: avatarUrl || '',
-      weight: 60,              // 体重（公斤），默认60kg
-      avgStride: 0.85,         // 平均步幅（米），默认0.85米
+      gender: gender || '',
+      age: age || 0,
+      height: height || 0,
+      weight: weight || 60,
       createTime: new Date(),
       totalRunCount: 0,
       totalDistance: 0

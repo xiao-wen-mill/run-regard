@@ -9,22 +9,28 @@ Page({
   },
 
   onLoad() {
-    this.loadRunHistory();
   },
 
   onShow() {
     this.getUserInfo();
+    this.setData({
+      page: 1,
+      hasMore: true,
+      historyList: [],
+    });
+    this.loadRunHistory(true);
   },
 
   getUserInfo() {
-    const userInfo = getApp().globalData.userInfo || {};
-    // 单位转换：米 -> 公里，秒 -> 分钟
-    const processedUserInfo = {
-      ...userInfo,
-      totalDistance: userInfo.totalDistance ? (userInfo.totalDistance / 1000).toFixed(2) : '0',
-      totalDuration: userInfo.totalDuration ? (userInfo.totalDuration / 60).toFixed(1) : '0',
-    };
-    this.setData({ userInfo: processedUserInfo });
+    const globalUserInfo = getApp().globalData.userInfo || {};
+    const currentUserInfo = this.data.userInfo || {};
+    this.setData({
+      userInfo: {
+        ...currentUserInfo,
+        nickName: globalUserInfo.nickName || '微信用户',
+        avatarUrl: globalUserInfo.avatarUrl || '',
+      },
+    });
   },
 
   // 跳转到跑步页面
@@ -40,7 +46,7 @@ Page({
     wx.showLoading({ title: "加载中..." });
     wx.cloud
       .callFunction({
-        name: "getHistory",
+        name: "get-history",
         data: { page: currentPage, pageSize },
       })
       .then((res) => {
@@ -53,10 +59,23 @@ Page({
             distanceKm: (item.distance / 1000).toFixed(2),
           }));
 
+          const mergedList = isRefresh ? newList : [...historyList, ...newList];
+
+          const stats = res.result.stats || {};
+          const totalKm = ((stats.totalDistance || 0) / 1000).toFixed(2);
+          const totalRunCount = stats.totalRunCount || 0;
+
+          const userInfo = {
+            ...(this.data.userInfo || {}),
+            totalDistance: totalKm,
+            totalRunCount: totalRunCount,
+          };
+
           this.setData({
-            historyList: isRefresh ? newList : [...historyList, ...newList],
+            historyList: mergedList,
             page: currentPage + 1,
             hasMore: res.result.hasMore,
+            userInfo: userInfo,
           });
         }
       })

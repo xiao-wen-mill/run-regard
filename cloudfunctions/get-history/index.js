@@ -1,16 +1,15 @@
 const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
+const _ = db.command
 
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
   const openid = wxContext.OPENID
 
-  // 可选分页参数，默认取最近 20 条
   const { page = 1, pageSize = 20 } = event
   const skip = (page - 1) * pageSize
 
-  // 查询当前用户的所有跑步记录，按时间倒序
   const result = await db.collection('run_records')
     .where({ openid: openid })
     .orderBy('createTime', 'desc')
@@ -18,10 +17,22 @@ exports.main = async (event, context) => {
     .limit(pageSize)
     .get()
 
-  // 获取总数（用于分页）
   const total = await db.collection('run_records')
     .where({ openid: openid })
     .count()
+
+  const aggResult = await db.collection('run_records')
+    .where({ openid: openid })
+    .aggregate()
+    .group({
+      _id: null,
+      totalDistance: _.sum('$distance'),
+      totalDuration: _.sum('$duration'),
+      totalRecords: _.sum(1),
+    })
+    .end()
+
+  const aggregates = aggResult.list[0] || { totalDistance: 0, totalDuration: 0, totalRecords: 0 }
 
   return {
     success: true,
@@ -29,6 +40,11 @@ exports.main = async (event, context) => {
     total: total.total,
     page: page,
     pageSize: pageSize,
-    hasMore: skip + result.data.length < total.total
+    hasMore: skip + result.data.length < total.total,
+    stats: {
+      totalDistance: aggregates.totalDistance || 0,
+      totalDuration: aggregates.totalDuration || 0,
+      totalRunCount: aggregates.totalRecords || 0,
+    }
   }
 }

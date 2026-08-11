@@ -133,9 +133,9 @@ exports.main = async (event, context) => {
       finalPace = calculatePace(duration, finalDistance)
     }
 
-    // 计算卡路里（优先使用前端传入的值，若无则计算）
-    let finalCalories = Number(calories) || 0
-    if (!finalCalories && finalDistance > 0) {
+    // 计算卡路里（始终从数据库读取体重进行计算，不再依赖前端传入值）
+    let finalCalories = 0
+    if (finalDistance > 0) {
       finalCalories = calculateCalories(userWeight, finalDistance)
     }
 
