@@ -26,20 +26,20 @@ Page({
             gender: fullUser.gender || "",
             age:
               fullUser.age !== undefined &&
-              fullUser.age !== null &&
-              fullUser.age !== 0
+                fullUser.age !== null &&
+                fullUser.age !== 0
                 ? String(fullUser.age)
                 : "",
             height:
               fullUser.height !== undefined &&
-              fullUser.height !== null &&
-              fullUser.height !== 0
+                fullUser.height !== null &&
+                fullUser.height !== 0
                 ? String(fullUser.height)
                 : "",
             weight:
               fullUser.weight !== undefined &&
-              fullUser.weight !== null &&
-              fullUser.weight !== 0
+                fullUser.weight !== null &&
+                fullUser.weight !== 0
                 ? String(fullUser.weight)
                 : "",
             isChecked: true,
@@ -104,36 +104,28 @@ Page({
       const app = getApp();
 
       if (isEditMode) {
-        if (!this.data.userId) {
-          wx.hideLoading();
-          return wx.showToast({
-            title: "用户信息加载中，请重试",
+        const res = await wx.cloud.callFunction({
+          name: "updateUserInfo",
+          data: {
+            nickName: nickName,
+            gender: gender,
+            age: Number(age),
+            height: Number(height),
+            weight: Number(weight),
+          },
+        });
+
+        wx.hideLoading();
+        if (res.result.success) {
+          app.globalData.userInfo = res.result.userInfo;
+          wx.showToast({ title: "资料已更新" });
+          setTimeout(() => wx.navigateBack(), 1000);
+        } else {
+          wx.showToast({
+            title: res.result.message || "保存失败",
             icon: "none",
           });
         }
-        const db = wx.cloud.database();
-        await db
-          .collection("users")
-          .doc(this.data.userId)
-          .update({
-            data: {
-              nickName: nickName,
-              gender: gender,
-              age: Number(age),
-              height: Number(height),
-              weight: Number(weight),
-            },
-          });
-
-        app.globalData.userInfo.nickName = nickName;
-        app.globalData.userInfo.gender = gender;
-        app.globalData.userInfo.age = Number(age);
-        app.globalData.userInfo.height = Number(height);
-        app.globalData.userInfo.weight = Number(weight);
-
-        wx.hideLoading();
-        wx.showToast({ title: "资料已更新" });
-        setTimeout(() => wx.navigateBack(), 1000);
       } else {
         const res = await wx.cloud.callFunction({
           name: "register",

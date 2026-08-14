@@ -88,9 +88,6 @@
   "permission": {
     "scope.userLocation": {
       "desc": "用于记录跑步距离与实时定位"
-    },
-    "scope.userLocationBackground": {
-      "desc": "后台持续记录跑步轨迹"
     }
   }
 }

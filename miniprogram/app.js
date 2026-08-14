@@ -11,13 +11,12 @@ App({
     } catch (e) {
       console.error("云开发初始化失败:", e);
     }
-    // 👉 开发测试阶段暂时注释掉自动登录验证，方便在模拟器查看登录/注册页面
-    // this.checkUserRegistration()
+    // 自动登录验证
+    this.checkUserRegistration()
   },
 
   onShow() {
-    // 👉 开发测试阶段暂时注释掉自动登录验证
-    // this.checkUserRegistration()
+    this.checkUserRegistration()
   },
 
   checkUserRegistration() {

@@ -92,11 +92,8 @@ Page({
     this.pauseStartTime = 0;
     this.totalPausedTime = 0;
 
-    // 请求后台定位权限
-    this.requestBackgroundLocationPermission();
-
-    // 使用后台持续定位，确保后台也能获取位置更新
-    wx.startLocationUpdateBackground({ type: "gcj02" });
+    // 使用前台定位
+    wx.startLocationUpdate({ type: "gcj02" });
 
     this.timer = setInterval(() => {
       if (!this.data.isPaused) {
@@ -127,7 +124,7 @@ Page({
       // 更新时间（使用位置回调来校准时间，避免定时器暂停问题）
       const elapsed = Math.floor(
         (point.timestamp - this.data.startTimestamp - this.totalPausedTime) /
-          1000,
+        1000,
       );
       this.setData({ time: elapsed });
       const h = Math.floor(elapsed / 3600);
@@ -167,27 +164,6 @@ Page({
     });
   },
 
-  requestBackgroundLocationPermission() {
-    wx.getSetting({
-      success: (res) => {
-        if (!res.authSetting["scope.userLocationBackground"]) {
-          wx.authorize({
-            scope: "scope.userLocationBackground",
-            success: () => {
-              console.log("后台定位授权成功");
-            },
-            fail: () => {
-              wx.showToast({
-                title: "请开启后台定位权限",
-                icon: "none",
-              });
-            },
-          });
-        }
-      },
-    });
-  },
-
   togglePause() {
     this.setData({ isPaused: !this.data.isPaused });
     if (this.data.isPaused) {
@@ -198,7 +174,7 @@ Page({
       // 累计暂停时间
       this.totalPausedTime += Date.now() - this.pauseStartTime;
       this.pauseStartTime = 0;
-      wx.startLocationUpdateBackground({ type: "gcj02" });
+      wx.startLocationUpdate({ type: "gcj02" });
     }
   },
 
@@ -275,8 +251,8 @@ Page({
     const a =
       Math.sin(dLat / 2) ** 2 +
       Math.cos((lat1 * Math.PI) / 180) *
-        Math.cos((lat2 * Math.PI) / 180) *
-        Math.sin(dLng / 2) ** 2;
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) ** 2;
     return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
   },
 });

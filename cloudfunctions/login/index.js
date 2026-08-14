@@ -25,8 +25,8 @@ exports.main = async (event, context) => {
       age: user.age || 0,
       height: user.height || 0,
       weight: user.weight || 60,
-      totalRunCount: user.totalRunCount,
-      totalDistance: user.totalDistance
+      totalRunCount: user.totalRunCount || 0,
+      totalDistance: user.totalDistance || 0
     }
   }
 }
