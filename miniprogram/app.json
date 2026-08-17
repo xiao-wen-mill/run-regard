@@ -4,6 +4,7 @@
     "pages/register/register",
     "pages/home/home",
     "pages/run/run",
+    "pages/jump/jump",
     "pages/history/history"
   ],
   "window": {
@@ -32,6 +33,10 @@
       {
         "pagePath": "pages/run/run",
         "text": "跑步"
+      },
+      {
+        "pagePath": "pages/jump/jump",
+        "text": "跳绳"
       },
       {
         "pagePath": "pages/history/history",

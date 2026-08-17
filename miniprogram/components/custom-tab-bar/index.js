@@ -3,6 +3,7 @@ Component({
     tabs: [
       { key: "home", text: "首页", path: "/pages/home/home" },
       { key: "run", text: "跑步", path: "/pages/run/run" },
+      { key: "jump", text: "跳绳", path: "/pages/jump/jump" },
       { key: "history", text: "历史", path: "/pages/history/history" },
     ],
     currentKey: "home",
@@ -21,6 +22,7 @@ Component({
         const tabMap = {
           "pages/home/home": "home",
           "pages/run/run": "run",
+          "pages/jump/jump": "jump",
           "pages/history/history": "history",
         };
         const key = tabMap[route] || "home";

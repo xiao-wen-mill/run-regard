@@ -21,6 +21,15 @@
           <view class="leg-r"></view>
         </view>
       </view>
+      <!-- 跳绳图标 -->
+      <view wx:if="{{item.key === 'jump'}}" class="icon-jump">
+        <view class="jump-icon {{currentKey === 'jump' ? 'active' : ''}}">
+          <view class="rope-hand-l"></view>
+          <view class="rope-hand-r"></view>
+          <view class="rope arc"></view>
+          <view class="jump-person"></view>
+        </view>
+      </view>
       <!-- 历史图标 -->
       <view wx:if="{{item.key === 'history'}}" class="icon-history">
         <view class="history-cal {{currentKey === 'history' ? 'active' : ''}}"></view>

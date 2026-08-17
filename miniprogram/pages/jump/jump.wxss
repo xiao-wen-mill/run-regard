@@ -1,0 +1,266 @@
+.container {
+  min-height: 100vh;
+  background: #e8f2ff;
+  padding-bottom: calc(140rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  animation: pageFadeIn 0.4s ease;
+}
+
+.header {
+  background: #d6e8ff;
+  padding: 60rpx 32rpx 32rpx;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.header-back {
+  position: absolute;
+  left: 32rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-top: 20rpx;
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.header-back-hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-50%) scale(0.92);
+}
+
+.back-icon {
+  font-size: 32rpx;
+  color: #1e3a5f;
+  font-weight: bold;
+}
+
+.header-icon {
+  width: 48rpx;
+  height: 48rpx;
+  margin-right: 16rpx;
+}
+
+.btn-icon {
+  width: 48rpx;
+  height: 48rpx;
+}
+
+.btn text {
+  font-size: 36rpx;
+}
+
+.header-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #1e3a5f;
+  flex: 1;
+  text-align: center;
+}
+
+.status-indicator {
+  position: fixed;
+  top: 140rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(239, 68, 68, 0.9);
+  color: #fff;
+  padding: 12rpx 28rpx;
+  border-radius: 32rpx;
+  font-size: 24rpx;
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  z-index: 100;
+  animation: blink 1s ease-in-out infinite;
+}
+
+.status-dot {
+  width: 10rpx;
+  height: 10rpx;
+  background: #fff;
+  border-radius: 50%;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.stats-section {
+  padding: 40rpx 32rpx;
+}
+
+.main-stat {
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 48rpx;
+  text-align: center;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+  margin-bottom: 24rpx;
+}
+
+.main-num {
+  font-size: 120rpx;
+  font-weight: bold;
+  color: #2563eb;
+  display: block;
+  line-height: 1;
+}
+
+.main-label {
+  font-size: 26rpx;
+  color: #6b7280;
+  margin-top: 12rpx;
+  display: block;
+}
+
+.stat-row {
+  display: flex;
+  gap: 16rpx;
+}
+
+.stat-card {
+  flex: 1;
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 28rpx 20rpx;
+  text-align: center;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.stat-num {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #2563eb;
+  display: block;
+}
+
+.stat-unit {
+  font-size: 22rpx;
+  color: #6b7280;
+  margin-top: 8rpx;
+  display: block;
+}
+
+.controls-section {
+  padding: 32rpx;
+}
+
+.btn {
+  width: 100%;
+  border: none;
+  border-radius: 16rpx;
+  padding: 28rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  transition: all 0.2s ease;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.start-btn {
+  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+  color: #fff;
+  box-shadow: 0 4rpx 16rpx rgba(59, 130, 246, 0.3);
+}
+
+.stop-btn {
+  background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+  color: #fff;
+  box-shadow: 0 4rpx 16rpx rgba(239, 68, 68, 0.3);
+}
+
+.calculating {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 28rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.loading-dot {
+  width: 20rpx;
+  height: 20rpx;
+  border: 4rpx solid #2563eb;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.debug-section {
+  margin: 0 32rpx 32rpx;
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.debug-title {
+  font-size: 26rpx;
+  font-weight: bold;
+  color: #1e3a5f;
+  margin-bottom: 16rpx;
+}
+
+.debug-content {
+  max-height: 400rpx;
+}
+
+.debug-line {
+  font-size: 22rpx;
+  color: #4b5563;
+  font-family: monospace;
+  padding: 6rpx 0;
+  border-bottom: 1rpx solid #f3f4f6;
+}
+
+.debug-line:last-child {
+  border-bottom: none;
+}
+
+.debug-empty {
+  font-size: 22rpx;
+  color: #9ca3af;
+  padding: 12rpx 0;
+  text-align: center;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
