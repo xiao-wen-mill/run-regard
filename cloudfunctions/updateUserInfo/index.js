@@ -40,6 +40,7 @@ exports.main = async (event, context) => {
       weight: Number(weight) || 0,
       totalRunCount: userRes.data[0].totalRunCount || 0,
       totalDistance: userRes.data[0].totalDistance || 0,
+      totalJumpCount: userRes.data[0].totalJumpCount || 0,
     }
 
     return {

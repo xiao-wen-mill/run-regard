@@ -23,7 +23,8 @@ exports.main = async (event, context) => {
       weight: weight || 60,
       createTime: new Date(),
       totalRunCount: 0,
-      totalDistance: 0
+      totalDistance: 0,
+      totalJumpCount: 0
     }
   })
   return { success: true, message: '注册成功' }
