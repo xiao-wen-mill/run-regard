@@ -1,0 +1,63 @@
+<view class="container">
+  <view class="header">
+    <navigator url="/pages/home/home" class="header-back" hover-class="header-back-hover">
+      <text class="back-icon">←</text>
+    </navigator>
+    <text class="header-title">跳绳</text>
+  </view>
+
+  <view wx:if="{{isJumping}}" class="status-indicator">
+    <view class="status-dot"></view>
+    <text>正在跳绳中</text>
+  </view>
+
+  <view class="stats-section">
+    <view class="main-stat">
+      <text class="main-num">{{count}}</text>
+      <text class="main-label">当前次数</text>
+    </view>
+    <view class="stat-row">
+      <view class="stat-card">
+        <text class="stat-num">{{timeStr}}</text>
+        <text class="stat-unit">运动时长</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-num">{{speed}}</text>
+        <text class="stat-unit">次/分钟</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-num">{{calories}}</text>
+        <text class="stat-unit">卡路里</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="controls-section">
+    <block wx:if="{{!isJumping && !isCalculating}}">
+      <button bindtap="toggleJump" class="btn start-btn">
+        <text>开始跳绳</text>
+      </button>
+    </block>
+    <block wx:elif="{{isCalculating}}">
+      <view class="calculating">
+        <view class="loading-dot"></view>
+        <text>计算中...</text>
+      </view>
+    </block>
+    <block wx:else>
+      <button bindtap="toggleJump" class="btn stop-btn">
+        <text>结束跳绳</text>
+      </button>
+    </block>
+  </view>
+
+  <view class="debug-section">
+    <view class="debug-title">调试信息</view>
+    <scroll-view class="debug-content" scroll-y="true">
+      <view wx:for="{{debugInfo}}" wx:key="index" class="debug-line">{{item}}</view>
+      <view wx:if="{{debugInfo.length === 0}}" class="debug-empty">暂无数据</view>
+    </scroll-view>
+  </view>
+
+  <custom-tab-bar></custom-tab-bar>
+</view>

@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "跳绳",
+  "usingComponents": {
+    "custom-tab-bar": "/components/custom-tab-bar/index"
+  }
+}
