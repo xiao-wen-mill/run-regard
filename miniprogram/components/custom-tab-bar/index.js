@@ -6,7 +6,7 @@ Component({
       { key: "jump", text: "跳绳", path: "/pages/jump/jump" },
       { key: "history", text: "历史", path: "/pages/history/history" },
     ],
-    currentKey: "home",
+    currentKey: "home"
   },
 
   attached() {
