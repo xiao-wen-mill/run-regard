@@ -256,6 +256,26 @@
   text-align: center;
 }
 
+.sim-banner {
+  margin: 0 32rpx 24rpx;
+  padding: 16rpx 24rpx;
+  background: #fff7ed;
+  border: 1rpx solid #fdba74;
+  border-radius: 12rpx;
+  color: #c2410c;
+  font-size: 24rpx;
+  text-align: center;
+}
+
+.sim-link {
+  margin-top: 16rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx dashed #e5e7eb;
+  color: #2563eb;
+  font-size: 24rpx;
+  text-align: center;
+}
+
 @keyframes pageFadeIn {
   from {
     opacity: 0;

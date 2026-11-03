@@ -11,6 +11,10 @@
     <text>正在跳绳中</text>
   </view>
 
+  <view wx:if="{{isSimulating}}" class="sim-banner">
+    <text>模拟数据演示中（未使用真实传感器）</text>
+  </view>
+
   <view class="stats-section">
     <view class="main-stat">
       <text class="main-num">{{count}}</text>
@@ -57,6 +61,13 @@
       <view wx:for="{{debugInfo}}" wx:key="index" class="debug-line">{{item}}</view>
       <view wx:if="{{debugInfo.length === 0}}" class="debug-empty">暂无数据</view>
     </scroll-view>
+    <view
+      wx:if="{{!isJumping && !isCalculating}}"
+      class="sim-link"
+      bindtap="startSimulation"
+    >
+      <text>传感器不可用？点这里用模拟数据调试</text>
+    </view>
   </view>
 
   <custom-tab-bar></custom-tab-bar>

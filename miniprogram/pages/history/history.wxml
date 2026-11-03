@@ -1,14 +1,29 @@
 <view class="container">
-  <!-- 顶部标题栏 -->
   <view class="header">
     <text class="header-icon">📋</text>
-    <text class="header-title">跑步历史</text>
+    <text class="header-title">历史记录</text>
   </view>
 
-  <!-- 内容区域 -->
+  <view class="tabs">
+    <view
+      class="tab {{activeTab === 'run' ? 'tab-active' : ''}}"
+      data-tab="run"
+      bindtap="switchTab"
+    >
+      🏃 跑步
+    </view>
+    <view
+      class="tab {{activeTab === 'jump' ? 'tab-active' : ''}}"
+      data-tab="jump"
+      bindtap="switchTab"
+    >
+      🪢 跳绳
+    </view>
+  </view>
+
   <view class="content">
-    <scroll-view scroll-y class="list">
-      <view wx:for="{{recordList}}" wx:key="_id" class="item">
+    <scroll-view scroll-y class="list" wx:if="{{activeTab === 'run'}}">
+      <view wx:for="{{runRecords}}" wx:key="_id" class="item">
         <view class="top">
           <text class="runner-icon">🏃</text>
           <text class="date">{{item.createTime}}</text>
@@ -35,13 +50,56 @@
         </view>
       </view>
 
-      <view wx:if="{{recordList.length === 0}}" class="empty">
+      <view wx:if="{{runRecords.length === 0}}" class="empty">
         <text class="empty-icon">🏃</text>
         <text class="empty-text">暂无跑步记录</text>
       </view>
     </scroll-view>
+
+    <scroll-view scroll-y class="list" wx:if="{{activeTab === 'jump'}}">
+      <view wx:for="{{jumpRecords}}" wx:key="_id" class="item">
+        <view class="top">
+          <text class="runner-icon">🪢</text>
+          <text class="date">{{item.createTime}}</text>
+        </view>
+        <view class="row">
+          <view class="cell">
+            <text class="label">总次数</text>
+            <text class="val highlight">{{item.count}} 次</text>
+          </view>
+          <view class="cell">
+            <text class="label">时长</text>
+            <text class="val">{{item.durationText}}</text>
+          </view>
+        </view>
+        <view class="row">
+          <view class="cell">
+            <text class="label">速度</text>
+            <text class="val">{{item.avgSpeed}} 次/分</text>
+          </view>
+          <view class="cell">
+            <text class="label">卡路里</text>
+            <text class="val">{{item.calories}} 千卡</text>
+          </view>
+        </view>
+        <view class="row" wx:if="{{item.maxContinuous > 0 || item.tripCount > 0}}">
+          <view class="cell">
+            <text class="label">最高连跳</text>
+            <text class="val">{{item.maxContinuous}}</text>
+          </view>
+          <view class="cell">
+            <text class="label">绊绳次数</text>
+            <text class="val">{{item.tripCount}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view wx:if="{{jumpRecords.length === 0}}" class="empty">
+        <text class="empty-icon">🪢</text>
+        <text class="empty-text">暂无跳绳记录</text>
+      </view>
+    </scroll-view>
   </view>
-  
-  <!-- 自定义底部导航栏 -->
+
   <custom-tab-bar></custom-tab-bar>
 </view>
