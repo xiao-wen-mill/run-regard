@@ -225,7 +225,7 @@ Page({
 
     wx.cloud
       .callFunction({
-        name: "saveRunRecord",
+        name: "save-run-record",
         data: {
           duration: this.data.time,
           distance: Math.round(this.data.distance),
