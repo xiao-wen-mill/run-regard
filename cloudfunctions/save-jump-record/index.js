@@ -35,15 +35,36 @@ function errorText(err) {
 }
 
 exports.main = async (event, context) => {
-  const { count, duration, avgSpeed, maxContinuous, tripCount } = event
+  let { count, duration, avgSpeed, maxContinuous, tripCount } = event
   const wxContext = cloud.getWXContext()
   const openid = wxContext.OPENID
 
-  if (!count || count <= 0) {
-    return {
-      success: false,
-      message: '跳绳次数必须大于0'
-    }
+  // 统一转为数值，避免字符串 / NaN 绕过校验
+  count = Number(count)
+  duration = Number(duration)
+  maxContinuous = Number(maxContinuous) || 0
+
+  // ===== 业务校验规则（按顺序判断，任一不通过即返回，不执行写库） =====
+  // 规则 1：基础数值防呆（防负数、防填0）
+  if (!count || count <= 0 || !duration || duration <= 0) {
+    return { success: false, message: '次数和时长必须大于0' }
+  }
+  // 规则 2：人体极限拦截（平均速度 > 240 次/分钟视为异常）
+  const calcAvgSpeed = count / (duration / 60)
+  if (calcAvgSpeed > 240) {
+    return { success: false, message: '数据异常：平均速度过快，请如实填写' }
+  }
+  // 规则 3：时长下限拦截（时长不足 30 秒但次数超过 50 不符合常理）
+  if (duration < 30 && count > 50) {
+    return { success: false, message: '运动时长过短，请核对数据' }
+  }
+  // 规则 4：单次总量上限（单次跳绳不超过 5000 个）
+  if (count > 5000) {
+    return { success: false, message: '单次跳绳数量过高，若为多次累计请分开录入' }
+  }
+  // 规则 5：逻辑自洽校验（最高连跳不能大于总次数）
+  if (maxContinuous > count) {
+    return { success: false, message: '数据异常：最高连跳不能大于总次数' }
   }
 
   try {
